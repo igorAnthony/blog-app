@@ -15,13 +15,13 @@ class _LoadingViewState extends State<LoadingView> {
   void _loadUserInfo() async {
     String token = await getToken();
     if (token == '') {
-      navigatorRoute(context, loginRoute);
+      navigatorPushNamedAndRemoveUntil(context, loginRoute);
     } else {
       ApiResponse response = await getUserDetail();
       if (response.error == null) {
-        navigatorRoute(context, homeRoute);
+        navigatorPushNamedAndRemoveUntil(context, homeRoute);
       } else if (response.error == unauthorized) {
-        navigatorRoute(context, loginRoute);
+        navigatorPushNamedAndRemoveUntil(context, loginRoute);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${response.error}')));
       }

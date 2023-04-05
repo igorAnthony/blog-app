@@ -24,7 +24,7 @@ class _RegisterViewState extends State<RegisterView> {
     ApiResponse response = await register(_name.text, _email.text, _password.text);
     
     if(response.error == null){
-      navigatorRoute(context, loginRoute);
+      navigatorPushNamedAndRemoveUntil(context, loginRoute);
     }else{
       setState(() {
         loading = false;
@@ -110,7 +110,7 @@ class _RegisterViewState extends State<RegisterView> {
             }),
             const SizedBox(height: 10,),
             kLoginOrRegisterHint("Not registered yet? ", 'Register here', (){
-              navigatorRoute(context, registerRoute);
+              navigatorPushNamedAndRemoveUntil(context, registerRoute);
             }),
           ],
         )

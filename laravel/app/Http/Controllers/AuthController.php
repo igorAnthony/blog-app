@@ -75,7 +75,7 @@ class AuthController extends Controller
             'name' => 'required|string'
         ]);
 
-        $image = $this->saveImage($request->$image, 'profiles');
+        $image = $this->saveImage($request->image, 'profiles');
         auth()->user()->update([
             'name' => $attrs['name'],
             'image' => $image

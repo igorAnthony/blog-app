@@ -36,7 +36,7 @@ class _LoginViewState extends State<LoginView> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('token', user.token ?? "0");
     await pref.setInt('userId', user.id ?? 0);
-    navigatorRoute(context, homeRoute);
+    navigatorPushNamedAndRemoveUntil(context, homeRoute);
   }
   @override
   void initState() {
@@ -91,7 +91,7 @@ class _LoginViewState extends State<LoginView> {
             }),
             const SizedBox(height: 10,),
             kLoginOrRegisterHint("Not registered yet? ", 'Register here', (){
-              navigatorRoute(context, registerRoute);
+              navigatorPushNamedAndRemoveUntil(context, registerRoute);
             }),
           ],
         )

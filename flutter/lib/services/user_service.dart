@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_blog_app/constant/api.dart';
 import 'package:flutter_blog_app/models/api_response.dart';
@@ -80,30 +81,65 @@ Future<ApiResponse> getUserDetail() async {
   ApiResponse apiResponse = ApiResponse();
   try{
     String token = await getToken();
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse(userURL),
       headers: {
-        'Accept':'application/json'
+        'Accept':'application/json',
+        'Authorization': 'Bearer $token'
       });
     switch(response.statusCode){
       case 200:
-        apiResponse.data = User.fromJson(
-          jsonDecode(response.body)
-        );
+        apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
       case 401:
         apiResponse.error = unauthorized;
         break;
       default:
-        apiResponse.error = serverError;
+        apiResponse.error = somethingWentWrong;
         break;
     }
   }
   catch(e){
-     apiResponse.error = somethingWentWrong;
+     apiResponse.error = serverError;
   }
   return apiResponse;
 }
+
+Future<ApiResponse> updateUser(String name, String? image) async {
+  ApiResponse apiResponse = ApiResponse();
+  try{
+    String token = await getToken();
+    final response = await http.put(
+      Uri.parse(userURL),
+      headers: {
+        'Accept':'application/json',
+        'Authorization':'Bearer $token'
+      },
+      body: image == null ? {
+        'name': name,
+      } : {
+        'name': name,
+        'image': image,
+      }
+      );
+    switch(response.statusCode){
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  }
+  catch(e){
+     apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
 
 Future<String> getToken() async{
   SharedPreferences pref = await SharedPreferences.getInstance();
@@ -118,4 +154,9 @@ Future<int> getUserId() async{
 Future<bool> logout() async{
   SharedPreferences pref = await SharedPreferences.getInstance();
   return await pref.remove('token');
+}
+
+String? getStringImage(File? file){
+  if(file==null) return null;
+  return base64Encode(file.readAsBytesSync());
 }

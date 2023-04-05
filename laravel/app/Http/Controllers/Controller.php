@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\URL;
 
     public function saveImage($image, $path = 'public')
     {
-        if($image)
+        if(!$image)
         {
             return null;
         }

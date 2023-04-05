@@ -16,6 +16,4 @@ class User {
       token: json['token'],
     );
   }
-
-  
 }
