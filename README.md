@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/login.png" width="200" height="400">
-  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/register.png" width="200" height="400">
-  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/home_view.png" width="200" height="400">
-  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/profile.png" width="200" height="400">
-  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/add_new_post.png" width="200" height="400">
+  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/login.png" width="150" height="300">
+  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/register.png" width="150" height="300">
+  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/home_view.png" width="150" height="300">
+  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/profile.png" width="150" height="300">
+  <img src="https://github.com/igorAnthony/igorAnthony/blob/main/blog-app/add_new_post.png" width="150" height="300">
 </p>
 
 <h1 align="center">Blog app </h1>
