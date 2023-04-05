@@ -100,7 +100,7 @@ class _RegisterViewState extends State<RegisterView> {
             ),
             const SizedBox(height: 10,),
             loading ? const Center(child: CircularProgressIndicator(strokeWidth: 3,),) :
-            kTextButton('Login', (){
+            kTextButton('Register', (){
               if(formkey.currentState!.validate()){
                 setState(() {
                   loading = true;
@@ -109,8 +109,8 @@ class _RegisterViewState extends State<RegisterView> {
               }
             }),
             const SizedBox(height: 10,),
-            kLoginOrRegisterHint("Not registered yet? ", 'Register here', (){
-              navigatorPushNamedAndRemoveUntil(context, registerRoute);
+            kLoginOrRegisterHint("Already have an account? ", 'Login here', (){
+              navigatorPushNamedAndRemoveUntil(context, loginRoute);
             }),
           ],
         )

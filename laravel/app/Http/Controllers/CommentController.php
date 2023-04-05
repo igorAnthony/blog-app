@@ -81,7 +81,11 @@ class CommentController extends Controller
         ]);
 
         $comment->update([
-            'comment' => 'Comment updated.'
+            'comment' => $attrs['comment']
+        ]);
+
+        return response([
+            'message' => 'Comment updated'
         ], 200);
     }
 
