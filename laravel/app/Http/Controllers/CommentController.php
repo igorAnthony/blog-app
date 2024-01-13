@@ -11,8 +11,7 @@ use App\Models\Comment;
 
 class CommentController extends Controller
 {
-    //get all commets of a post
-    public function index($id)
+    public function one($id)
     {
         $post = Post::find($id);
 
@@ -28,8 +27,7 @@ class CommentController extends Controller
         ], 200);
     }
 
-    //create a comment
-    public function store(Request $request, $id)
+    public function create(Request $request, $id)
     {
         $post = Post::find($id);
 
@@ -90,7 +88,7 @@ class CommentController extends Controller
     }
 
     //delete a comment
-    public function destroy($id)
+    public function delete($id)
     {
         $comment = Comment::find($id);
 

@@ -10,7 +10,7 @@ use App\Models\Post;
 class PostController extends Controller
 {
     //get all posts
-    public function index()
+    public function all()
     {
         return response([
             'posts' => Post::orderBy('created_at', 'desc')->with('user:id,name,image')->withCount('comments', 'likes')
@@ -22,15 +22,14 @@ class PostController extends Controller
     }
 
     //get single post
-    public function show($id)
+    public function one($id)
     {
         return response([
             'post' => Post::where('id',$id)->withCount('comments', 'likes')->get()
         ], 200);
     }
 
-    //create a post
-    public function store(Request $request)
+    public function create(Request $request)
     {
         //validate fields
         $attrs = $request->validate([
@@ -51,7 +50,6 @@ class PostController extends Controller
         ], 200);
     }
 
-    //update a post
     public function update(Request $request, $id)
     {
 
@@ -85,7 +83,7 @@ class PostController extends Controller
             'post' => $post
         ], 200);
     }
-    public function destroy($id)
+    public function delete($id)
     {
         $post = Post::find($id);
 
