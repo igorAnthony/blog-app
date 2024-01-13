@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/models/post.dart';
 
-class PostWidget extends StatelessWidget {
+class CardPostWidget extends StatelessWidget {
   final Post post;
   final Function(int postId) onLikeDislike;
 
-  const PostWidget({
-    Key? key,
+  const CardPostWidget({
+    super.key,
     required this.post,
     required this.onLikeDislike,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

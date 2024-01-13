@@ -1,24 +1,24 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/constant/api.dart';
 import 'package:flutter_blog_app/constant/colors.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/constant/route.dart';
+import 'package:flutter_blog_app/features/auth/store/user_repository.dart';
+import 'package:flutter_blog_app/features/auth/store/user_store.dart';
 import 'package:flutter_blog_app/models/api_response.dart';
 import 'package:flutter_blog_app/models/user.dart';
-import 'package:flutter_blog_app/services/user_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProfileView extends StatefulWidget {
+class ProfileView extends ConsumerStatefulWidget {
   const ProfileView({super.key});
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  _ProfileViewState createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
-  User? user;
+class _ProfileViewState extends ConsumerState<ProfileView> {
   bool _loading = true;
   File? _imageFile;
   final _picker = ImagePicker();
@@ -40,30 +40,6 @@ class _ProfileViewState extends State<ProfileView> {
     }
   }
 
-  void getUser() async{
-    ApiResponse response = await getUserDetail();
-    
-    if(response.error == null){
-      setState(() {
-        user = response.data as User;
-        _loading = false;
-        _name.text = user!.name ?? '';
-        _aboutMe.text = user!.aboutMe ?? '';
-        _speciality.text = user!.speciality ?? '';
-        _username.text = user!.username ?? '';
-        _password.text = user!.password ?? '';
-      });
-      print('${user!.image}');
-    }
-    else if(response.error == unauthorized){
-      logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-    }
-  }
-
   void updateProfile() async{
     User user = User(
       name: _name.text,
@@ -71,43 +47,29 @@ class _ProfileViewState extends State<ProfileView> {
       speciality: _speciality.text,
       username: _username.text,
       password: _password.text,
-      image: getStringImage(_imageFile)
+      image: UserRepository().getStringImage(_imageFile)
     );
-    ApiResponse response = await updateUser(user);
-    setState(() {
+    ApiResponse apiResponse = await ref.read(userStoreProvider.notifier).updateProfile(user);
+    if(apiResponse.error == null){
+      Navigator.pop(context);
+      setState(() {
         _loading = false;
       });
-    if(response.error == null){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.data}')
-      ));
-    }
-    else if(response.error == unauthorized){
-      logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
     }
   }
 
   @override
   void initState() {
-    _name = TextEditingController();
-    _aboutMe = TextEditingController();
-    _speciality = TextEditingController();
-    _username = TextEditingController();
-    _password = TextEditingController();
-    _confirmPassword = TextEditingController();
-    getUser();
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _loading? Center(child: CircularProgressIndicator(),)
+    final user = ref.watch(userStoreProvider);
+    return _loading? const Center(child: CircularProgressIndicator(),)
     : Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -117,15 +79,15 @@ class _ProfileViewState extends State<ProfileView> {
               Text("Profile", style: Theme.of(context).textTheme.titleMedium!),
               //menu with edit profile and logout
               PopupMenuButton(
-                icon: Icon(Icons.more_horiz),
+                icon: const Icon(Icons.more_horiz),
                 itemBuilder: (context) => [
-                  PopupMenuItem(
-                    child: Text('Edit Profile'),
+                  const PopupMenuItem(
                     value: 'edit',
+                    child: Text('Edit Profile'),
                   ),
-                  PopupMenuItem(
-                    child: Text('Logout'),
+                  const PopupMenuItem(
                     value: 'logout',
+                    child: Text('Logout'),
                   ),
                 ],
                 onSelected: (value) {
@@ -133,11 +95,11 @@ class _ProfileViewState extends State<ProfileView> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Edit Profile'),
+                        title: const Text('Edit Profile'),
                         content: Container(
                           height: 450,
                           width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -147,8 +109,8 @@ class _ProfileViewState extends State<ProfileView> {
                                   height: 90,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
-                                    image: _imageFile == null ? user!.image != null ? DecorationImage(
-                                      image: NetworkImage('${user!.image}'),
+                                    image: _imageFile == null ? user.value!.image != null ? DecorationImage(
+                                      image: NetworkImage('${user.value!.image}'),
                                       fit: BoxFit.cover
                                     ) : null : DecorationImage(
                                       image: FileImage(_imageFile ?? File('')),
@@ -231,7 +193,29 @@ class _ProfileViewState extends State<ProfileView> {
                     );
                   }
                   else if(value == 'logout'){
-                    logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Logout'),
+                        content: const Text('Are you sure you want to logout?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              ref.read(userStoreProvider.notifier).logout();
+                              Navigator.pop(context);
+                              Navigator.pushNamedAndRemoveUntil(context, loginRoute, (route) => false);
+                            },
+                            child: const Text('Logout'),
+                          ),
+                        ],
+                      )
+                    );
                   }
                 },
               )
@@ -247,7 +231,7 @@ class _ProfileViewState extends State<ProfileView> {
                   color: Colors.black.withOpacity(0.1),
                   blurRadius: 1,
                   spreadRadius: 0.4,
-                  offset: Offset(0, 0)
+                  offset: const Offset(0, 0)
                 )
               ],
             ),
@@ -260,7 +244,7 @@ class _ProfileViewState extends State<ProfileView> {
                     children: [
                       GestureDetector(
                         child: Container(
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(color: AppColors.darkBlueColor, width: 3)
@@ -270,8 +254,8 @@ class _ProfileViewState extends State<ProfileView> {
                             height: 65,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              image: _imageFile == null ? user!.image != null ? DecorationImage(
-                                image: NetworkImage('${user!.image}'),
+                              image: _imageFile == null ? user.value!.image != null ? DecorationImage(
+                                image: NetworkImage('${user.value!.image}'),
                                 fit: BoxFit.cover
                               ) : null : DecorationImage(
                                 image: FileImage(_imageFile ?? File('')),
@@ -285,25 +269,25 @@ class _ProfileViewState extends State<ProfileView> {
                           _getImage();
                         },
                       ),
-                      SizedBox(width: 20,),
+                      const SizedBox(width: 20,),
                   
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('@igoranthony', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black.withOpacity(0.4), fontSize: 12),),
-                          Text('${user!.name}', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black, fontSize: 24),),
-                          SizedBox(height: 5,),
-                          Text('Flutter Developer', style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w500, fontSize: 14),)
+                          Text('${user.value?.username != null ?  user.value!.username : 'Username'}', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black.withOpacity(0.4), fontSize: 12),),
+                          Text('${user.value!.name}', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black, fontSize: 24),),
+                          const SizedBox(height: 5,),
+                          Text('${user.value?.speciality != null ? user.value!.speciality : 'Speciality'}', style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w500, fontSize: 14),)
                         ],
                       ),
                   
                     ],
                   ),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   Text('About me', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black),),
-                  SizedBox(height: 10,),
-                  Text('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam id aliquam ultrices, nisl nunc aliquet enim, vitae aliquam nisl nunc eu nisl. Sed euismod, diam id aliquam ultrices, nisl nunc aliquet enim, vitae aliquam nisl nunc eu nisl.', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black.withOpacity(0.3), fontSize: 14),),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
+                  Text('${user.value?.aboutMe != null ? user.value!.aboutMe : ''}', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black.withOpacity(0.3), fontSize: 14),),
+                  const SizedBox(height: 10,),
                   Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -317,8 +301,8 @@ class _ProfileViewState extends State<ProfileView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            margin: EdgeInsets.only(right: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            margin: const EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               color: Colors.black.withOpacity(0.15)
@@ -332,7 +316,7 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.only(right: 15),
+                            padding: const EdgeInsets.only(right: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -345,7 +329,7 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.only(right: 20),
+                            padding: const EdgeInsets.only(right: 20),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -366,7 +350,7 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
           ),
-           SizedBox(height: 20,),
+           const SizedBox(height: 20,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

@@ -6,18 +6,18 @@ import 'package:flutter_blog_app/models/api_response.dart';
 import 'package:flutter_blog_app/models/post.dart';
 import 'package:flutter_blog_app/services/post_service.dart';
 import 'package:flutter_blog_app/services/user_service.dart';
-import 'package:flutter_blog_app/view/posts/widgets/explore_section_widget.dart';
-import 'package:flutter_blog_app/view/posts/widgets/header_content_widget.dart';
-import 'package:flutter_blog_app/view/posts/widgets/post_widget.dart';
+import 'package:flutter_blog_app/features/posts/widgets/explore_section_widget.dart';
+import 'package:flutter_blog_app/features/posts/widgets/header_content_widget.dart';
+import 'package:flutter_blog_app/features/posts/widgets/card_post_widget.dart';
 
-class PostView extends StatefulWidget {
-  const PostView({super.key});
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  State<PostView> createState() => _PostViewState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _PostViewState extends State<PostView> {
+class _HomeViewState extends State<HomeView> {
   List<dynamic> _postList = [];
   int userId = 0;
   bool _loading = true;
@@ -117,7 +117,7 @@ class _PostViewState extends State<PostView> {
                               itemCount: _postList.length,
                               itemBuilder: (context, index) {
                                 Post post = _postList[index];
-                                return PostWidget(
+                                return CardPostWidget(
                                   post: post,
                                   onLikeDislike: (postId) {
                                     _likeDislike(postId);

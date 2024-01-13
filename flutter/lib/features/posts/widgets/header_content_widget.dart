@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/constant/route.dart';
-import 'package:flutter_blog_app/services/user_service.dart';
+import 'package:flutter_blog_app/features/auth/store/user_store.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HeaderContent extends StatelessWidget {
+class HeaderContent extends ConsumerWidget {
   const HeaderContent({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -16,8 +16,7 @@ class HeaderContent extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
           IconButton(
             onPressed: () {
-              logout().then((value) =>
-                  navigatorPushNamedAndRemoveUntil(context, loginRoute));
+              ref.read(userStoreProvider.notifier).logout();
             },
             icon: const Icon(
               Icons.notifications_outlined,

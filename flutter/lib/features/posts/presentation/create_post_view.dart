@@ -8,7 +8,7 @@ import 'package:flutter_blog_app/models/api_response.dart';
 import 'package:flutter_blog_app/models/post.dart';
 import 'package:flutter_blog_app/services/post_service.dart';
 import 'package:flutter_blog_app/services/user_service.dart';
-import 'package:flutter_blog_app/view/posts/presentation/custom_text_field_widget.dart';
+import 'package:flutter_blog_app/features/posts/widgets/custom_text_field_widget.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:image_picker/image_picker.dart';
 

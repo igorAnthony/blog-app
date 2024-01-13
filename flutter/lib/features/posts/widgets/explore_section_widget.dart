@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blog_app/features/story/story_widget.dart';
+import 'package:flutter_blog_app/models/story.dart';
 
 class ExploreSection extends StatelessWidget {
   const ExploreSection({super.key});
@@ -20,23 +22,11 @@ class ExploreSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: 10,
               itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.amber),
-                    ),
-                    const SizedBox(height: 5),
-                    Align(
-                        alignment: Alignment.center,
-                        child: Text('User $index',
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500))),
-                  ],
+                return UserStoryWidget(
+                  story: Story(
+                    name: 'User $index',
+                    imageUrl: 'https://picsum.photos/200/300?random=$index',
+                  ),
                 );
               },
             ),

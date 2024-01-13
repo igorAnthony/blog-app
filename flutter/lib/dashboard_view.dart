@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/colors.dart';
 import 'package:flutter_blog_app/constant/route.dart';
-import 'package:flutter_blog_app/view/posts/presentation/post_view.dart';
-import 'package:flutter_blog_app/view/profile_view.dart';
+import 'package:flutter_blog_app/features/home/home_view.dart';
+import 'package:flutter_blog_app/features/profile/profile_view.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class DashboardView extends StatefulWidget {
+  const DashboardView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<DashboardView> createState() => _DashboardViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _DashboardViewState extends State<DashboardView> {
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: currentIndex == 0 ? const SafeArea(child: PostView()) : const SafeArea(child: ProfileView()),
+      body: currentIndex == 0 ? const SafeArea(child: HomeView()) : const SafeArea(child: ProfileView()),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.darkBlueColor,
         foregroundColor: Colors.white,

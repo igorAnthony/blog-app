@@ -1,58 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/constant/route.dart';
+import 'package:flutter_blog_app/features/auth/store/user_store.dart';
 import 'package:flutter_blog_app/models/api_response.dart';
-import 'package:flutter_blog_app/models/user.dart';
-import 'package:flutter_blog_app/services/user_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
 
-  @override
-  State<RegisterView> createState() => _RegisterViewState();
-}
+class RegisterView extends ConsumerWidget {
+  RegisterView({super.key});
 
-class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  late final TextEditingController _name;
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-  late final TextEditingController _passwordConfirm;
-  bool loading = false;
-  void _registerUser() async {
-    ApiResponse response = await register(_name.text, _email.text, _password.text);
-    
+  final TextEditingController _name = TextEditingController();
+  final TextEditingController _email= TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _passwordConfirm = TextEditingController();
+  final bool loading = false;
+  
+  void _registerUser(ApiResponse response) async {    
     if(response.error == null){
-      navigatorPushNamedAndRemoveUntil(context, loginRoute);
-    }else{
-      setState(() {
-        loading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:
-        Text("${response.error}") 
-      ));
+      //navigatorPushNamedAndRemoveUntil(context, loginRoute);
     }
   }
-  
+
   @override
-  void initState() {
-    _name = TextEditingController();
-    _email = TextEditingController();
-    _password = TextEditingController();
-    _passwordConfirm = TextEditingController();
-    super.initState();
-  }
-  @override
-  void dispose() {
-    _name.dispose();
-    _email.dispose();
-    _password.dispose();
-    _passwordConfirm.dispose();
-    super.dispose();
-  }
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Form(
         key: formkey,
@@ -61,13 +32,13 @@ class _RegisterViewState extends State<RegisterView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Spacer(),
+              const Spacer(),
               const Text('Register', style: TextStyle(
                 fontSize: 50,
                 fontWeight: FontWeight.w100,
                 color: Colors.black,
               )),
-              Spacer(),
+              const Spacer(),
               TextFormField(
                 keyboardType: TextInputType.name,
                 enableSuggestions: false,
@@ -107,18 +78,14 @@ class _RegisterViewState extends State<RegisterView> {
               loading ? const Center(child: CircularProgressIndicator(strokeWidth: 3,),) :
               kTextButton('Register', (){
                 if(formkey.currentState!.validate()){
-                  setState(() {
-                    loading = true;
-                    _registerUser();
-                  });
+                  ref.read(userStoreProvider.notifier).register(_name.text, _email.text, _password.text).then((value) => _registerUser(value));
                 }
               }),
-              Spacer(),
+              const Spacer(),
               kLoginOrRegisterHint("Already have an account? ", 'Login here', (){
                 navigatorPushNamedAndRemoveUntil(context, loginRoute);
               }),
-              Spacer(),
-
+              const Spacer(),
             ],
           ),
         )

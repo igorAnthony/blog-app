@@ -5,7 +5,6 @@ import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/models/api_response.dart';
 import 'package:flutter_blog_app/models/comment.dart';
 import 'package:flutter_blog_app/services/comment_service.dart';
-import 'package:flutter_blog_app/services/user_service.dart';
 
 class CommentView extends StatefulWidget {
   final int? postId;
