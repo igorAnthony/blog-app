@@ -64,8 +64,19 @@ class AuthController extends Controller
 
     public function user()
     {
+        $user = auth()->user()->with('followers', 'followings')->find(auth()->user()->id);
+
         return response([
-            'user' => auth()->user()
+            'user' => $user
+        ], 200);
+    }
+    //get user by id
+    public function getUser($id)
+    {
+        $user = User::with('followers', 'followings')->find($id);
+
+        return response([
+            'user' => $user
         ], 200);
     }
 

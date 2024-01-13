@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_blog_app/constant/api.dart';
+import 'package:flutter_blog_app/features/utils/token_storage.dart';
 import 'package:flutter_blog_app/models/api_response.dart';
 import 'package:flutter_blog_app/models/user.dart';
 import 'dart:convert';
@@ -9,10 +10,11 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
-  String _token = '';
+  TokenStorage _tokenStorage = TokenStorage();
+  String? _token;
 
   UserRepository() {
-    getToken().then((value) => _token = value);
+    _tokenStorage.getToken().then((value) => _token = value);
   }
 
   Future<ApiResponse> login(String email, String password) async {
@@ -25,6 +27,7 @@ class UserRepository {
       switch(response.statusCode) {
         case 200:
           apiResponse.data = User.fromJson(jsonDecode(response.data));
+          await _tokenStorage.saveToken(jsonDecode(response.data)['token']);
           break;
         case 401:
           apiResponse.error = 'Unauthorized';
@@ -140,11 +143,6 @@ class UserRepository {
       rethrow;
     }  
     return apiResponse;  
-  }
-
-  Future<String> getToken() async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getString('token') ?? '';
   }
 
   Future<int> getUserId() async{

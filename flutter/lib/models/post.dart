@@ -7,7 +7,7 @@ class Post {
   String? createdAt;
   String? updatedAt;
   String? title;
-  String? subtitle;
+  int? specialityId;
   int? likesCount;
   int? commentsCount;
   User? user;
@@ -22,10 +22,10 @@ class Post {
       this.user, 
       this.selfLiked,
       this.image,
+      this.specialityId,
       this.createdAt,
       this.updatedAt,
       this.title,
-      this.subtitle     
     }
   );
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -36,7 +36,7 @@ class Post {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       title: json['title'],
-      subtitle: json['subtitle'],
+      specialityId: json['speciality_id'],
       likesCount: json['likes_count'],
       commentsCount: json['comments_count'],
       selfLiked: json['likes'].length > 0,
@@ -55,7 +55,7 @@ class Post {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       title: post.title,
-      subtitle: post.subtitle,
+      specialityId: post.specialityId,
       likesCount: post.likesCount,
       commentsCount: post.commentsCount,
       selfLiked: post.selfLiked,

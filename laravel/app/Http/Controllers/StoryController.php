@@ -9,15 +9,22 @@ class StoryController extends Controller
 {
     public function one($id)
     {
+        $story = Story::with('user:id,name,image')->find($id);
+        
         return response([
-            'story' => Story::where('id', $id)->with('user:id,name,image')->get()
+            'story' => $story
         ], 200);
     }
 
     public function all()
     {
+        //apenas pegue story apenas de quem o usuario segue de duração de no maximo de 24 horas e ordene por data de criação, traga o usuario que criou o story
+        $stories = Story::whereHas('user.followers', function ($q) {
+            $q->where('follower_id', auth()->user()->id);
+        })->where('created_at', '>=', now()->subHours(24))->with('user:id,name,image')->orderBy('created_at', 'desc')->get();
+
         return response([
-            'stories' => Story::orderBy('created_at', 'desc')->with('user:id,name,image')->get()
+            'stories' => $stories
         ], 200);
     }
     public function delete($id)

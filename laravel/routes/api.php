@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryTechController;
 use App\Http\Controllers\StoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     //user
     Route::get('/user', [AuthController::class, 'user']);
+    Route::get('user/{id}', [AuthController::class,'getUser']);
     Route::put('/user', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -52,5 +54,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/stories', [StoryController::class, 'createStory']); //create story
     Route::delete('/stories/{id}', [StoryController::class, 'delete']); //delete story
 
-
+    //category
+    Route::get('/category', [CategoryTechController::class, 'all']); //all categories
+    Route::get('/category/{id}', [CategoryTechController::class, 'one']); //get single category
 });

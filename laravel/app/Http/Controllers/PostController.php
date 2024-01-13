@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
@@ -12,20 +13,18 @@ class PostController extends Controller
     //get all posts
     public function all()
     {
+        $posts = Post::with('categoryTech:name,description,image')->withCount('comments', 'likes')->get();
         return response([
-            'posts' => Post::orderBy('created_at', 'desc')->with('user:id,name,image')->withCount('comments', 'likes')
-            ->with('likes', function($like){
-                return $like->where('user_id', auth()->user()->id)->select('id', 'user_id', 'post_id')->get();
-            })
-            ->get()
+            'posts' => $posts
         ], 200);
     }
 
-    //get single post
     public function one($id)
-    {
+    {      
+        //get with user, categoryTech, comments and likes
+        $posts = Post::with('user:id,name,email', 'categoryTech:name,description,image', 'comments', 'likes')->find($id);
         return response([
-            'post' => Post::where('id',$id)->withCount('comments', 'likes')->get()
+            'post' => $posts
         ], 200);
     }
 
@@ -38,12 +37,14 @@ class PostController extends Controller
 
         $image = $this->saveImage($request->image, 'posts');
 
-        $post = Post::create([
-            'body' => $attrs['body'],
-            'user_id' => auth()->user()->id,
-            'image' => $image
-        ]);
-
+        $post = new Post();
+        $post->body = $attrs['body'];
+        $post->title = $request->title;
+        $post->user_id = auth()->user()->id;
+        $post->image = $image;
+        $post->category_tech_id = $request->category_tech_id;
+        $post->save();
+        
         return response([
             'message' => 'Post created.',
             'post' => $post
@@ -74,9 +75,12 @@ class PostController extends Controller
             'body' => 'required|string'
         ]);
 
-        $post->update([
-            'body' => $attrs['body']
-        ]);
+        $image = $this->saveImage($request->image, 'posts');
+        $post->body = $attrs['body'];
+        $post->title = $request->title;
+        $post->image = $image;
+        $post->category_tech_id = $request->category_tech_id;
+        $post->save();
 
         return response([
             'message' => 'Post updated.',
@@ -101,8 +105,6 @@ class PostController extends Controller
             ], 403);
         }
 
-        $post->comments()->delete();
-        $post->likes()->delete();
         $post->delete();
 
         return response([

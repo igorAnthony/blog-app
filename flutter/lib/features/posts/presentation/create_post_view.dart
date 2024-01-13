@@ -24,7 +24,6 @@ class CreatePostView extends StatefulWidget {
 
 class _CreatePostViewState extends State<CreatePostView> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  late final TextEditingController _postBody;
   late final TextEditingController _postTitle;
   final QuillController _textEditorController = QuillController.basic();
 
@@ -42,7 +41,12 @@ class _CreatePostViewState extends State<CreatePostView> {
   }
   void _createPost() async{
     String? image = _imageFile == null ? null : getStringImage(_imageFile);
-    ApiResponse response = await createPost(_postBody.text, image);
+    Post post = Post();
+    post.title = _postTitle.text;
+    post.body = _textEditorController.document.toPlainText();
+    post.image = image;
+    
+    ApiResponse response = 
 
     if(response.error == null){
       Navigator.of(context).pop();
@@ -62,7 +66,7 @@ class _CreatePostViewState extends State<CreatePostView> {
 
   void _editPost(int postId) async{
     
-    ApiResponse response = await editPost(postId, _postBody.text);
+    //ApiResponse response = await editPost(postId, _postBody.text);
 
     if(response.error == null){
       Navigator.of(context).pop();
@@ -83,16 +87,12 @@ class _CreatePostViewState extends State<CreatePostView> {
   
   @override
   void initState() {
-    _postBody = TextEditingController();
     _postTitle = TextEditingController();
-    if(widget.post != null){
-      _postBody.text = widget.post!.body ?? '';
-    }
+
     super.initState();
   }
   @override
   void dispose() {
-    _postBody.dispose();
     super.dispose();
   }
 
@@ -101,6 +101,25 @@ class _CreatePostViewState extends State<CreatePostView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title == null ? "Add new post" : "${widget.title}", style: Theme.of(context).textTheme.titleMedium),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: () {
+              if(_formkey.currentState!.validate()){
+                setState(() {
+                  _loading = !_loading;
+                });
+                if(widget.post == null)
+                {
+                  _createPost();
+                }
+                else{
+                  _editPost(widget.post!.id ?? 0);
+                }
+              }
+            },
+          )
+        ],
       ),
       body: _loading ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -153,8 +172,9 @@ class _CreatePostViewState extends State<CreatePostView> {
                     ),
                   ),
                 ],
-              ),
+              ),              
               const SizedBox(height: 10,),
+                            
               CustomTextField(
                 title: 'Title',
                 hintText: "Start typing...",
@@ -197,8 +217,8 @@ class _CreatePostViewState extends State<CreatePostView> {
               ),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.grey[100]
@@ -224,57 +244,4 @@ class _CreatePostViewState extends State<CreatePostView> {
       ),
     );
   }
-}//widget.post != null ? const SizedBox() :
-          // Container(
-          //   width: MediaQuery.of(context).size.width,
-          //   height: 400,
-          //   decoration: BoxDecoration(
-          //     image: _imageFile == null ? null : DecorationImage(
-          //       image: FileImage(_imageFile ?? File('')),
-          //       fit: BoxFit.cover
-          //     ),
-          //   ),
-          //   child: Center(
-          //     child: IconButton(
-          //       icon: const Icon(Icons.image, size:50, color:Colors.black38),
-          //       onPressed: () {
-          //         getImage();
-          //       },
-          //     ),
-          //   ),
-          // ),
-          // Form(
-          //   key: _formkey,
-          //   child: Padding(
-          //     padding: const EdgeInsets.all(8),
-          //     child: TextFormField(
-          //       controller: _postBody,
-          //       keyboardType: TextInputType.multiline,
-          //       maxLines: 9,
-          //       validator: (value) => value!.isEmpty ? 'Post body is required' : null,
-          //       decoration: const InputDecoration(
-          //         hintText: "Post body...",
-          //         border: OutlineInputBorder(borderSide: BorderSide(width: 1, color:Colors.black38))
-          //       ),
-          //     ),
-          //   )
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 8),
-          //   child: kTextButton("Post", (){
-          //     if(_formkey.currentState!.validate()){
-          //       setState(() {
-          //         _loading = !_loading;
-          //       });
-          //       if(widget.post == null)
-          //       {
-          //         _createPost();
-          //       }
-          //       else{
-          //         _editPost(widget.post!.id ?? 0);
-          //       }
-          //     }
-          //   },
-              
-          //   ),
-          // ),
+}
