@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
+import 'package:flutter_blog_app/constant/dimensions.dart';
 import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/models/api_response.dart';
 import 'package:flutter_blog_app/models/user.dart';
@@ -53,47 +54,54 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        centerTitle: true,
-      ),
       body: Form(
         key: formkey,
-        child: ListView(
-          padding: const EdgeInsets.all(32),
-          children: [
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              enableSuggestions: false,
-              autocorrect: false,
-              controller: _email,
-              validator: (val) => val!.isEmpty ? 'Invalid email address' : null,
-              decoration: kInputDecoration('Email'),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _password,
-              enableSuggestions: false,
-              autocorrect: false,
-              obscureText: true,
-              validator: (val) => val!.length < 6 ? 'Invalid password address' : null,
-              decoration: kInputDecoration('Password'),
-            ),
-            const SizedBox(height: 10,),
-            loading ? const Center(child: CircularProgressIndicator(strokeWidth: 3,),) :
-            kTextButton('Login', (){
-              if(formkey.currentState!.validate()){
-                setState(() {
-                  loading = true;
-                  _loginUser();
-                });
-              }
-            }),
-            const SizedBox(height: 10,),
-            kLoginOrRegisterHint("Not registered yet? ", 'Register here', (){
-              navigatorPushNamedAndRemoveUntil(context, registerRoute);
-            }),
-          ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              Text('Blog App', style: TextStyle(
+                fontSize: 50,
+                fontWeight: FontWeight.w100,
+                color: Colors.black,
+              )),
+              Spacer(),
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                enableSuggestions: false,
+                autocorrect: false,
+                controller: _email,
+                validator: (val) => val!.isEmpty ? 'Invalid email address' : null,
+                decoration: kInputDecoration('Email'),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: _password,
+                enableSuggestions: false,
+                autocorrect: false,
+                obscureText: true,
+                validator: (val) => val!.length < 6 ? 'Invalid password address' : null,
+                decoration: kInputDecoration('Password'),
+              ),
+              const SizedBox(height: 30),
+              loading ? const Center(child: CircularProgressIndicator(strokeWidth: 3,),) :
+              kTextButton('Login', (){
+                if(formkey.currentState!.validate()){
+                  setState(() {
+                    loading = true;
+                    _loginUser();
+                  });
+                }
+              }),
+              Spacer(),
+              kLoginOrRegisterHint("Not registered yet? ", 'Register here', (){
+                navigatorPushNamedAndRemoveUntil(context, registerRoute);
+              }),
+              Spacer(),
+            ],
+          ),
         )
       )
     );

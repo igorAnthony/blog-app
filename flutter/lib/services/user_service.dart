@@ -37,12 +37,15 @@ Future<ApiResponse> login(String email, String password) async {
     }
   }
   catch(e){
-     apiResponse.error = somethingWentWrong;
+    print("aaaaaaaaaaa1");
+    print(e);
+    apiResponse.error = somethingWentWrong;
   }
   return apiResponse;
 }
 //register
 Future<ApiResponse> register(String name, String email, String password) async {
+  print("aaaaa");
   ApiResponse apiResponse = ApiResponse();
   try{
     final response = await http.post(
@@ -54,6 +57,7 @@ Future<ApiResponse> register(String name, String email, String password) async {
         'password': password,
         'password_confirmation': password,
       });
+    print(response.body);
     switch(response.statusCode){
       case 200:
         apiResponse.data = User.fromJson(
@@ -73,6 +77,8 @@ Future<ApiResponse> register(String name, String email, String password) async {
     }
   }
   catch(e){
+    print("aaaaa");
+    print(e);
      apiResponse.error = somethingWentWrong;
   }
   return apiResponse;
@@ -105,7 +111,7 @@ Future<ApiResponse> getUserDetail() async {
   return apiResponse;
 }
 
-Future<ApiResponse> updateUser(String name, String? image) async {
+Future<ApiResponse> updateUser(User user) async {
   ApiResponse apiResponse = ApiResponse();
   try{
     String token = await getToken();
@@ -115,13 +121,8 @@ Future<ApiResponse> updateUser(String name, String? image) async {
         'Accept':'application/json',
         'Authorization':'Bearer $token'
       },
-      body: image == null ? {
-        'name': name,
-      } : {
-        'name': name,
-        'image': image,
-      }
-      );
+      body: User.toJson(user)  
+    );
     switch(response.statusCode){
       case 200:
         apiResponse.data = jsonDecode(response.body)['message'];

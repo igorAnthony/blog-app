@@ -16,4 +16,8 @@ class Like extends Model
         'user_id',
         'post_id'
     ];
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 }

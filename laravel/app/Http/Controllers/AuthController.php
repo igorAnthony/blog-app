@@ -5,13 +5,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
     //register
     public function register(Request $request)
     {
-        //validate fields
+        Log::info("entrei");
         $attrs = $request ->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',

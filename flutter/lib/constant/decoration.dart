@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blog_app/constant/themes.dart';
 
 InputDecoration kInputDecoration(String label) {
   return InputDecoration(
@@ -11,17 +12,13 @@ InputDecoration kInputDecoration(String label) {
       )));
 }
 
-TextButton kTextButton(String label, Function onPressed) {
-  return TextButton(
-    onPressed: () => onPressed(),
-    style: ButtonStyle(
-      backgroundColor: MaterialStateColor.resolveWith((states) => (Colors.deepPurple)),
-      padding: MaterialStateProperty.resolveWith((states) => const EdgeInsets.symmetric(vertical: 10)),
-    ),
+GestureDetector kTextButton(String label, Function onPressed, {TextStyle? style}) {
+  return  GestureDetector(
+    onTap: () => onPressed(),
     child: Text(
-      label,
-      style: const TextStyle(color: Colors.white),
-    ),
+        label,
+        style: style ?? const TextStyle(color: Colors.black)
+      ),
   );
 }
 
@@ -38,23 +35,31 @@ Row kLoginOrRegisterHint(String text, String label, Function onTap) {
   );
 }
 
-Expanded kLikeAndComment (int value, IconData icon, Color color, Function onTap) {
-  return Expanded(
-    child: Material(
-      child: InkWell(
-        onTap:() => onTap(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size:16, color: color),
-              const SizedBox(width: 4,),
-              Text('$value'),
-            ],
-          ),
-        ),
+InkWell kButton (int value, IconData icon, Color color, {Function? onTap}) {
+  return onTap == null ? InkWell(
+    onTap: () => onTap!(),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size:20, color: color),
+          const SizedBox(width: 4,),
+          Text('$value'),
+        ],
       ),
-    )
+    ),
+  ) : InkWell(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size:20, color: color),
+          const SizedBox(width: 4,),
+          Text('$value'),
+        ],
+      ),
+    ),
   );
 }
