@@ -66,5 +66,16 @@ class DatabaseSeeder extends Seeder
         $user->speciality = 'Flutter Developer';
         $user->save();
 
+        /*$table->id();
+            $table->integer('user_id');
+            $table->string('body');
+            $table->string('title');
+            $table->foreignId('category_tech_id')->nullable()->constrained('category_teches')->onDelete('cascade');
+            $table->string('image')->nullable();
+            $table->timestamps();
+        });*/
+        //create a post from admin with random data
+        
+
     }
 }
