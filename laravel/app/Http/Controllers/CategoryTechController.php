@@ -10,12 +10,12 @@ class CategoryTechController extends Controller
     public function one($id)
     {
         return response([
-            'story' => CategoryTech::where('id', $id)->get()
+            'category' => CategoryTech::where('id', $id)->get()
         ], 200);
     }
     public function all(){
         return response([
-            'stories' => CategoryTech::orderBy('created_at', 'desc')->get()
+            'categories' => CategoryTech::orderBy('created_at', 'desc')->get()
         ], 200);
     } 
 }

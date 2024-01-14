@@ -11,17 +11,23 @@ use App\Models\Post;
 class PostController extends Controller
 {
     //get all posts
-    public function all()
+    public function all(Request $request)
     {
-        $posts = Post::with('categoryTech:name,description,image')->withCount('comments', 'likes')->get();
-        return response([
-            'posts' => $posts
-        ], 200);
+        $categoryId = $request->input('category_id');
+
+        $query = Post::with('categoryTech:name,description,image')->withCount('comments', 'likes');
+    
+        if ($categoryId !== null) {
+            $query->where('category_tech_id', $categoryId);
+        }
+    
+        $posts = $query->get();
+    
+        return response()->json(['posts' => $posts], 200);
     }
 
     public function one($id)
     {      
-        //get with user, categoryTech, comments and likes
         $posts = Post::with('user:id,name,email', 'categoryTech:name,description,image', 'comments', 'likes')->find($id);
         return response([
             'post' => $posts

@@ -55,6 +55,6 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::delete('/stories/{id}', [StoryController::class, 'delete']); //delete story
 
     //category
-    Route::get('/category', [CategoryTechController::class, 'all']); //all categories
-    Route::get('/category/{id}', [CategoryTechController::class, 'one']); //get single category
+    Route::get('/categories', [CategoryTechController::class, 'all']); //all categories
+    Route::get('/categories/{id}', [CategoryTechController::class, 'one']); //get single category
 });
