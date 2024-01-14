@@ -6,7 +6,7 @@ part of 'posts_store.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$postsStoreHash() => r'6b4d53ecece4727d9e3a95955b60140b4f19e589';
+String _$postsStoreHash() => r'2683adeee69a1d05f7bcb027080fc417e46eb7c3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,9 +32,11 @@ class _SystemHash {
 abstract class _$PostsStore
     extends BuildlessAutoDisposeAsyncNotifier<List<Post>> {
   late final int? categoryId;
+  late final int? userId;
 
   FutureOr<List<Post>> build({
     int? categoryId,
+    int? userId,
   });
 }
 
@@ -50,9 +52,11 @@ class PostsStoreFamily extends Family<AsyncValue<List<Post>>> {
   /// See also [PostsStore].
   PostsStoreProvider call({
     int? categoryId,
+    int? userId,
   }) {
     return PostsStoreProvider(
       categoryId: categoryId,
+      userId: userId,
     );
   }
 
@@ -62,6 +66,7 @@ class PostsStoreFamily extends Family<AsyncValue<List<Post>>> {
   ) {
     return call(
       categoryId: provider.categoryId,
+      userId: provider.userId,
     );
   }
 
@@ -86,8 +91,11 @@ class PostsStoreProvider
   /// See also [PostsStore].
   PostsStoreProvider({
     int? categoryId,
+    int? userId,
   }) : this._internal(
-          () => PostsStore()..categoryId = categoryId,
+          () => PostsStore()
+            ..categoryId = categoryId
+            ..userId = userId,
           from: postsStoreProvider,
           name: r'postsStoreProvider',
           debugGetCreateSourceHash:
@@ -98,6 +106,7 @@ class PostsStoreProvider
           allTransitiveDependencies:
               PostsStoreFamily._allTransitiveDependencies,
           categoryId: categoryId,
+          userId: userId,
         );
 
   PostsStoreProvider._internal(
@@ -108,9 +117,11 @@ class PostsStoreProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.categoryId,
+    required this.userId,
   }) : super.internal();
 
   final int? categoryId;
+  final int? userId;
 
   @override
   FutureOr<List<Post>> runNotifierBuild(
@@ -118,6 +129,7 @@ class PostsStoreProvider
   ) {
     return notifier.build(
       categoryId: categoryId,
+      userId: userId,
     );
   }
 
@@ -126,13 +138,16 @@ class PostsStoreProvider
     return ProviderOverride(
       origin: this,
       override: PostsStoreProvider._internal(
-        () => create()..categoryId = categoryId,
+        () => create()
+          ..categoryId = categoryId
+          ..userId = userId,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         categoryId: categoryId,
+        userId: userId,
       ),
     );
   }
@@ -145,13 +160,16 @@ class PostsStoreProvider
 
   @override
   bool operator ==(Object other) {
-    return other is PostsStoreProvider && other.categoryId == categoryId;
+    return other is PostsStoreProvider &&
+        other.categoryId == categoryId &&
+        other.userId == userId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, categoryId.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -160,6 +178,9 @@ class PostsStoreProvider
 mixin PostsStoreRef on AutoDisposeAsyncNotifierProviderRef<List<Post>> {
   /// The parameter `categoryId` of this provider.
   int? get categoryId;
+
+  /// The parameter `userId` of this provider.
+  int? get userId;
 }
 
 class _PostsStoreProviderElement
@@ -169,6 +190,8 @@ class _PostsStoreProviderElement
 
   @override
   int? get categoryId => (origin as PostsStoreProvider).categoryId;
+  @override
+  int? get userId => (origin as PostsStoreProvider).userId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

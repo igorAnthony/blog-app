@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blog_app/features/story/story_view.dart';
 import 'package:flutter_blog_app/features/story/story_widget.dart';
-import 'package:flutter_blog_app/models/story.dart';
+import 'package:flutter_blog_app/features/story/story_model.dart';
 
 class ExploreSection extends StatelessWidget {
   const ExploreSection({super.key});
@@ -22,10 +23,24 @@ class ExploreSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: 10,
               itemBuilder: (context, index) {
-                return UserStoryWidget(
-                  story: Story(
-                    name: 'User $index',
-                    imageUrl: 'https://picsum.photos/200/300?random=$index',
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StoryView(
+                          imageUrl: 'https://picsum.photos/200/300?random=$index',
+                          name: 'User $index',
+                          avatarUrl: 'https://picsum.photos/200/300?random=$index',
+                        ),
+                      ),
+                    );
+                  },
+                  child: UserStoryWidget(
+                    story: Story(
+                      name: 'User $index',
+                      imageUrl: 'https://picsum.photos/200/300?random=$index',
+                    ),
                   ),
                 );
               },

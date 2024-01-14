@@ -1,5 +1,3 @@
-//esse arquivo é o que vai ser chamado quando o usuario clicar em cima do avatar do usuario no story, ele vai expandir a imagem igual do instagram
-
 import 'package:flutter/material.dart';
 
 class StoryView extends StatelessWidget {

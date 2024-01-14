@@ -35,7 +35,6 @@ class CategoryRepository{
           }
           categories = (response.data['categories'] as List).map((c) => Category.fromJson(c)).toList();
           List<String> categoriesString = categories.map((e) => jsonEncode(e.toJson())).toList();
-          print("categoriesString: $categoriesString");
           prefs.setStringList('categories', categoriesString);                    
           break;
         case 401:
@@ -48,7 +47,6 @@ class CategoryRepository{
     } catch (e) {
       print('Erro na requisição: $e');
     }
-    print("chegue ao fim do get categories");
     return categories;
   }
 }

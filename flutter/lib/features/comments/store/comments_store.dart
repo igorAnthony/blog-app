@@ -1,6 +1,6 @@
+import 'package:flutter_blog_app/features/comments/comment_model.dart';
 import 'package:flutter_blog_app/features/comments/store/comments_repository.dart';
 import 'package:flutter_blog_app/utils/api_response.dart';
-import 'package:flutter_blog_app/features/comments/comment.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'comments_store.g.dart';

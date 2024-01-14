@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_blog_app/constant/api.dart';
+import 'package:flutter_blog_app/features/comments/comment_model.dart';
 import 'package:flutter_blog_app/utils/token_storage.dart';
 import 'package:flutter_blog_app/utils/api_response.dart';
-import 'package:flutter_blog_app/features/comments/comment.dart';
 
 class CommentsRepository{
   String? _token = '';

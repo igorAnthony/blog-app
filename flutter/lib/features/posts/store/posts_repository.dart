@@ -14,10 +14,16 @@ class PostsRepository {
     _tokenStorage.getToken().then((value) => _token = value);
   }
 
-  Future<List<Post>> getPosts({int? categoryId}) async {
+  Future<List<Post>> getPosts({int? categoryId, int? userId}) async {
     List<Post> posts = [];
     try {
-      String url = categoryId == null ? postsURL : '$postsURL?category_id=$categoryId';
+      String url = postsURL;
+      if(categoryId != null){
+        url += "?category_id=$categoryId";
+      }else if(userId != null) {
+        url += "?user_id=$userId";
+      }
+
       _token = await _tokenStorage.getToken();
       final response = await Dio().get(url, options: Options(
         headers: {
@@ -31,7 +37,9 @@ class PostsRepository {
             posts = [];
             break;
           }
-          posts = posts = (response.data['posts'] as List).map((p) => Post.fromJson(p)).toList();
+          response.data['posts'].forEach((p){
+            posts.add(Post.fromJson(p));
+          });          
           break;
         case 401:
           print('Unauthorized');
@@ -41,40 +49,84 @@ class PostsRepository {
           break;
       }
     } catch (e) {
-      print('Erro na requisição: $e');
+      print('Erro na requisição getPosts: $e');
     }
     return posts;
   }
 
   //get one post
-  Future<ApiResponse> getOnePost(int postId) async {
-    ApiResponse apiResponse = ApiResponse();
+  Future<Post> getOnePost(int postId) async {
+    Post post = Post();
     try{
-      final response = await Dio().get('$baseURL$postsURL/$postId');
+      _token = await _tokenStorage.getToken();
+      final response = await Dio().get('$postsURL/$postId', options: Options(
+        headers: {
+          'Accept' : 'application/json',
+          'Authorization' : 'Bearer $_token'
+        }
+      ));
 
       switch(response.statusCode) {
-        case 200: Post.fromJson(response.data);
-          apiResponse.data as List<Post>;
+        case 200: 
+          if(response.data == null) {
+            post = Post();
+            break;
+          }
+          post = Post.fromJson(response.data['post']);
           break;
         case 401:
-          apiResponse.error = 'Unauthorized';
+          print('Unauthorized');
           break;
         default:
-          apiResponse.error = 'Error';
+          print('Error');
           break;
       }
     } catch(e) {
       rethrow;
     }
-    return apiResponse;
+    return post;
   }
 
-  Future<ApiResponse> createPost(Post post) async {
-    ApiResponse apiResponse = ApiResponse();
+  //get post by user_id
+  Future<List<Post>> getPostByUserId(int userId) async {
+    List<Post> posts = [];
+    try{
+      _token = await _tokenStorage.getToken();
+      final response = await Dio().get('$postsURL?user_id=$userId', 
+          options: Options(
+            headers: {
+            'Accept' : 'application/json',
+            'Authorization' : 'Bearer $_token'
+          }
+        )
+      );
 
+      switch(response.statusCode) {
+        case 200: 
+          if(response.data == null) {
+            posts = [];
+            break;
+          }
+          posts = (response.data['posts'] as List).map((p) => Post.fromJson(p)).toList();
+          break;
+        case 401:
+          print('Unauthorized');
+          break;
+        default:
+          print('Error');
+          break;
+      }
+    } catch(e) {
+      rethrow;
+    }
+    return posts;
+  }
+
+  Future<String> createPost(Post post) async {
     try {
+      _token = await _tokenStorage.getToken();
       final response = await Dio().post(postsURL, data: {
-        'body' : post.toJson()
+        'post' : post.toJson()
       }, options: Options(
         headers: {
           'Accept' : 'application/json',
@@ -83,19 +135,15 @@ class PostsRepository {
       ));
       switch(response.statusCode) {
         case 200:
-          apiResponse.data = Post.fromJson(response.data);
-          break;
+          return '200';
         case 401:
-          apiResponse.error = 'Unauthorized';
-          break;
+          return '401';
         default:
-          apiResponse.error = 'Error';
-          break;
+          return '${response.statusCode}';
       }
     } catch (e) {
-      rethrow;
+      return 'Erro na requisição createPost: $e';
     }
-    return apiResponse;
   }
   //edit post
   Future<ApiResponse> editPost(Post post) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
-import 'package:flutter_blog_app/features/comments/comment.dart';
+import 'package:flutter_blog_app/features/comments/comment_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CommentView extends ConsumerStatefulWidget {

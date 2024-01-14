@@ -1,12 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/constant/api.dart';
 import 'package:flutter_blog_app/constant/route.dart';
-import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
-import 'package:flutter_blog_app/utils/api_response.dart';
 import 'package:flutter_blog_app/features/posts/model/post.dart';
+import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
 import 'package:flutter_blog_app/features/posts/widgets/custom_text_field_widget.dart';
+import 'package:flutter_blog_app/utils/utils.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -103,10 +103,28 @@ class _CreatePostViewState extends ConsumerState<CreatePostView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: () {
-              if(_formkey.currentState!.validate()){
-                //ref.read(postsStoreProvider.)
-              }
+            onPressed: () async {
+                Post post = Post();
+                post.title = _postTitle.text;
+                post.body = _textEditorController.document.toDelta().toJson();
+                post.image = _imageFile == null ? null : getStringImage(_imageFile!);
+                switch(await ref.read(postsStoreProvider().notifier).createPost(post))
+                {
+                  case '200':
+                    Navigator.of(context).pop();
+                    break;
+                  case '401':
+                    navigatorPushNamedAndRemoveUntil(context, loginRoute);
+                    break;
+                  default:
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Error')
+                    ));
+                    break;
+                }
+
+                
+
             },
           )
         ],

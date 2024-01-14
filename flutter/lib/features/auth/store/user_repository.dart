@@ -17,8 +17,8 @@ class UserRepository {
     _tokenStorage.getToken().then((value) => _token = value);
   }
 
-  Future<ApiResponse> login(String email, String password) async {
-    ApiResponse apiResponse = ApiResponse();
+  Future<User> login(String email, String password) async {
+    User user = User();
     try {
       final response = await Dio().post(loginURL, data: {
         'email' : email,
@@ -27,22 +27,22 @@ class UserRepository {
       _token = await _tokenStorage.getToken();
       switch(response.statusCode) {
         case 200:
-          apiResponse.data = User.fromJson(response.data);
+          user = User.fromJson(response.data['user']);
           await _tokenStorage.saveToken(response.data['token']);
           SharedPreferences pref = await SharedPreferences.getInstance();
           await pref.setInt('userId', response.data['user']['id']);
           break;
         case 401:
-          apiResponse.error = 'Unauthorized';
+          print('Unauthorized');
           break;
         default:
-          apiResponse.error = 'Error'; 
+          print('Error');
           break;
       }
     } catch (e) {
-      rethrow;
+      print('Erro na requisição: $e');
     }
-    return apiResponse;
+    return user;
 
   }
 
@@ -100,7 +100,6 @@ class UserRepository {
 
   Future<User> getUser() async {
     int userId = await getUserId();
-    print("userId: $userId");
     User user = User();
     try {
       _token = await _tokenStorage.getToken();
@@ -113,7 +112,6 @@ class UserRepository {
       switch(response.statusCode) {
         case 200:
           if (response.data != null && response.data['user'] != null) {
-            print("response.data['user']: ${response.data['user']}");
             user = User.fromJson(response.data['user']);
           } else {
             print('User data is null or missing');
@@ -168,8 +166,5 @@ class UserRepository {
     return await pref.remove('token');
   }
 
-  String? getStringImage(File? file){
-    if(file==null) return null;
-    return base64Encode(file.readAsBytesSync());
-  }
+  
 }

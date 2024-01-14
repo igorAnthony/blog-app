@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/features/posts/model/post.dart';
+import 'package:flutter_blog_app/features/posts/presentation/post_detail_view.dart';
 
 class CardPostWidget extends StatelessWidget {
   final Post post;
@@ -16,11 +17,11 @@ class CardPostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => PostDetailView(post: post),
-        //   ),
-        // );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PostDetailView(post),
+          ),
+        );
       },
       child: Container(
         height: 90,
@@ -52,19 +53,17 @@ class CardPostWidget extends StatelessWidget {
                 children: [
                   const SizedBox(height: 3),
                   Text(
-                    (post.user?.name)!.toUpperCase(),
+                    (post.user?.name)?.toUpperCase() ?? '',
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(height: 5),
-                  Text('${post.body}', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black, fontSize: 18)),
+                  Text('${post.title}', style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Colors.black, fontSize: 18)),
                   Row(
                     children: [
                       kButton(
                         post.likesCount ?? 0,
-                        post.selfLiked == true
-                            ? Icons.favorite
-                            : Icons.favorite_border_outlined,
-                        post.selfLiked == true ? Colors.red : Colors.black38,
+                        Icons.favorite_border_outlined,
+                        Colors.black38,
                         onTap: () {
                           onLikeDislike(post.id ?? 0);
                         },

@@ -1,51 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter_blog_app/features/auth/model/user.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 
 class Post {
   int? id;
-  String? body;
+  List<dynamic>? body;
   String? image;
   String? createdAt;
   String? updatedAt;
   String? title;
-  int? specialityId;
+  int? categoryId;
   int? likesCount;
   int? commentsCount;
   User? user;
-  bool? selfLiked;
 
   Post(
     {
       this.id, 
-      this.body, 
       this.likesCount, 
+      this.body,
       this.commentsCount,  
       this.user, 
-      this.selfLiked,
       this.image,
-      this.specialityId,
+      this.categoryId,
       this.createdAt,
       this.updatedAt,
       this.title,
     }
   );
   factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      id: json['id'],
-      body: json['body'],
-      image: json['image'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      title: json['title'],
-      specialityId: json['speciality_id'],
-      likesCount: json['likes_count'],
-      commentsCount: json['comments_count'],
-      selfLiked: json['likes'].length > 0,
-      user: User(
-        id: json['user']['id'],
-        name: json['user']['name'],
-        image: json['user']['image']
-      )
-    );
+    Post post = Post();
+    post.id = json['id'];
+    post.body = json['body'] != null ? jsonDecode(json['body']) : null;
+    post.image = json['image'];
+    post.createdAt = json['createdAt'];
+    post.updatedAt = json['updatedAt'];
+    post.title = json['title'];
+    post.categoryId = json['categoryId'];
+    post.likesCount = json['likesCount'];
+    post.commentsCount = json['commentsCount'];
+    post.user = json['user'] != null ? User.fromJson(json['user']) : null;
+    return post;
   }
   Map<String, dynamic> toJson() {
     return {
@@ -55,10 +51,9 @@ class Post {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'title': title,
-      'specialityId': specialityId,
+      'categoryId': categoryId,
       'likesCount': likesCount,
       'commentsCount': commentsCount,
-      'selfLiked': selfLiked,
       'user': user?.toJson(), // assuming User has a proper toJson method
     };
   }

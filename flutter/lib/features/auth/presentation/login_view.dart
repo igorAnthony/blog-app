@@ -3,10 +3,7 @@ import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
 import 'package:flutter_blog_app/utils/token_storage.dart';
-import 'package:flutter_blog_app/utils/api_response.dart';
-import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends ConsumerWidget {
   LoginView({super.key});
