@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/constant/themes.dart';
+import 'package:flutter_blog_app/constant/text_theme.dart';
 
 InputDecoration kInputDecoration(String label) {
   return InputDecoration(

@@ -12,7 +12,7 @@ class HeaderContent extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Hi, Igor!',
+          Text('Hi, ${ref.read(userStoreProvider).value?.name ?? 'Name'}!',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
           IconButton(
             onPressed: () {

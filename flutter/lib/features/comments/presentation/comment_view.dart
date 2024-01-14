@@ -1,105 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/constant/api.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
-import 'package:flutter_blog_app/constant/route.dart';
-import 'package:flutter_blog_app/models/api_response.dart';
-import 'package:flutter_blog_app/models/comment.dart';
-import 'package:flutter_blog_app/services/comment_service.dart';
+import 'package:flutter_blog_app/features/comments/comment.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CommentView extends StatefulWidget {
+class CommentView extends ConsumerStatefulWidget {
   final int? postId;
 
   const CommentView({super.key, this.postId});
 
   @override
-  State<CommentView> createState() => _CommentViewState();
+  _CommentViewState createState() => _CommentViewState();
 }
 
-class _CommentViewState extends State<CommentView> {
-  List<dynamic> _commentsList = [];
-  bool _loading = true; 
-  int userId = 0;
+class _CommentViewState extends  ConsumerState<CommentView> {
+  final List<dynamic> _commentsList = [];
+  //bool _loading = true; 
+  int? userId = 0;
   int _editCommentId = 0;
 
   late final TextEditingController _commentController;
 
-  Future<void> _getComments() async{
-    userId = await getUserId();
+  // Future<void> _getComments() async{
+  //   userId = ref.read(userStoreProvider).value!.id;
     
-    ApiResponse response = await getComment(widget.postId ?? 0);
+  //   ApiResponse response = await getComment(widget.postId ?? 0);
 
-    if(response.error == null){
-      setState(() { 
-        _commentsList = response.data as List<dynamic>;
-        _loading = _loading ? !_loading : _loading;
-      });
-    }
-    else if(response.error == unauthorized){
-      logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-    }
-  }
+  //   if(response.error == null){
+  //     setState(() { 
+  //       _commentsList = response.data as List<dynamic>;
+  //       _loading = _loading ? !_loading : _loading;
+  //     });
+  //   }
+  //   else if(response.error == unauthorized){
+  //     logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
+  //   }else{
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('${response.error}')
+  //     ));
+  //   }
+  // }
 
-  void _createComment() async {
-    ApiResponse response = await createComment(widget.postId ?? 0, _commentController.text);
+  // void _createComment() async {
+  //   ApiResponse response = await createComment(widget.postId ?? 0, _commentController.text);
 
-    if(response.error == null){
-      setState(() {
-        _commentController.clear();
-        _loading = _loading ? !_loading : _loading;
-      });
-    }
-    else if(response.error == unauthorized){
-      logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
-    }else{
-      setState(() {
-        _loading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-    }
-  }
+  //   if(response.error == null){
+  //     setState(() {
+  //       _commentController.clear();
+  //       _loading = _loading ? !_loading : _loading;
+  //     });
+  //   }
+  //   else if(response.error == unauthorized){
+  //     logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
+  //   }else{
+  //     setState(() {
+  //       _loading = false;
+  //     });
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('${response.error}')
+  //     ));
+  //   }
+  // }
 
-  void _editComment() async {
-    ApiResponse response = await editComment(_editCommentId, _commentController.text);
+  // void _editComment() async {
+  //   ApiResponse response = await editComment(_editCommentId, _commentController.text);
 
-    if(response.error == null){
-      _editCommentId = 0;
-      _commentController.clear();
-      _getComments();
-    }
-    else if(response.error == unauthorized){
-      logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-    }
-  }
+  //   if(response.error == null){
+  //     _editCommentId = 0;
+  //     _commentController.clear();
+  //     _getComments();
+  //   }
+  //   else if(response.error == unauthorized){
+  //     logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
+  //   }else{
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('${response.error}')
+  //     ));
+  //   }
+  // }
 
-  void _deleteComment(int commentId) async {
-    ApiResponse response = await deleteComment(commentId);
+  // void _deleteComment(int commentId) async {
+  //   ApiResponse response = await deleteComment(commentId);
 
-    if(response.error == null){
-      _getComments();
-    }
-    else if(response.error == unauthorized){
-      logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-    }
-  }
+  //   if(response.error == null){
+  //     _getComments();
+  //   }
+  //   else if(response.error == unauthorized){
+  //     logout().then((value) => {navigatorPushNamedAndRemoveUntil(context, loginRoute)});
+  //   }else{
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('${response.error}')
+  //     ));
+  //   }
+  // }
 
   @override
   void initState() {
     _commentController = TextEditingController();
-    _getComments();    
+    //_getComments();    
     super.initState();
   }
   @override
@@ -111,14 +108,15 @@ class _CommentViewState extends State<CommentView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Comments')
+        title: const Text('Comments')
       ),
       body: Column(
         children: [
           Expanded( 
             child: RefreshIndicator(
               onRefresh: () {
-                return _getComments();
+                //return _getComments();
+                return Future.value();
               },
               child: ListView.builder(
                 itemCount: _commentsList.length,
@@ -185,7 +183,7 @@ class _CommentViewState extends State<CommentView> {
                                     _commentController.text = comment.comment ?? '';
                                   });
                                 }else{
-                                  _deleteComment(comment.id ?? 0);
+                                  //_deleteComment(comment.id ?? 0);
                                 }
                               },        
                             ) : const SizedBox(height: 10,),                            
@@ -222,16 +220,16 @@ class _CommentViewState extends State<CommentView> {
                   onPressed: (){
                     if(_commentController.text.isNotEmpty){
                       setState(() {
-                        _loading = true;
+                        //_loading = true;
                       });
                       if(_editCommentId > 0){
-                        _editComment();
+                       // _editComment();
                       }else{
-                        _createComment();
+                        //_createComment();
                       }   
                     }
                   }, 
-                  icon: Icon(Icons.send)
+                  icon: const Icon(Icons.send)
                 )
               ],
             ),

@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/colors.dart';
 import 'package:flutter_blog_app/constant/route.dart';
-import 'package:flutter_blog_app/constant/themes.dart';
+import 'package:flutter_blog_app/constant/text_theme.dart';
 import 'package:flutter_blog_app/features/auth/presentation/login_view.dart';
-import 'package:flutter_blog_app/features/utils/loading_view.dart';
+import 'package:flutter_blog_app/utils/loading_view.dart';
 import 'package:flutter_blog_app/features/posts/presentation/create_post_view.dart';
-import 'package:flutter_blog_app/dashboard_view.dart';
+import 'package:flutter_blog_app/main_layout.dart';
 import 'package:flutter_blog_app/features/home/home_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,7 +36,7 @@ class _BlogApp extends ConsumerWidget{
           loginRoute: (context) => LoginView(),
           registerRoute: (context) => RegisterView(),
           homeRoute: (context) => const HomeView(),
-          dashboardRoute: (context) => const DashboardView(),
+          dashboardRoute: (context) => const MainLayout(),
           createPostRoute: (context) => const CreatePostView(),
         }
     );

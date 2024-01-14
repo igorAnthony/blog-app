@@ -4,14 +4,14 @@ import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/features/home/home_view.dart';
 import 'package:flutter_blog_app/features/profile/profile_view.dart';
 
-class DashboardView extends StatefulWidget {
-  const DashboardView({super.key});
+class MainLayout extends StatefulWidget {
+  const MainLayout({super.key});
 
   @override
-  State<DashboardView> createState() => _DashboardViewState();
+  State<MainLayout> createState() => _MainLayoutState();
 }
 
-class _DashboardViewState extends State<DashboardView> {
+class _MainLayoutState extends State<MainLayout> {
   int currentIndex = 0;
 
   @override

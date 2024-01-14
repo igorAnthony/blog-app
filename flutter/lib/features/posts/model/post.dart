@@ -1,4 +1,4 @@
-import 'package:flutter_blog_app/models/user.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 
 class Post {
   int? id;
@@ -47,23 +47,19 @@ class Post {
       )
     );
   }
-  factory Post.toJson(Post post){
-    return Post(
-      id: post.id,
-      body: post.body,
-      image: post.image,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
-      title: post.title,
-      specialityId: post.specialityId,
-      likesCount: post.likesCount,
-      commentsCount: post.commentsCount,
-      selfLiked: post.selfLiked,
-      user: User(
-        id: post.user!.id,
-        name: post.user!.name,
-        image: post.user!.image
-      )
-    );
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'body': body,
+      'image': image,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'title': title,
+      'specialityId': specialityId,
+      'likesCount': likesCount,
+      'commentsCount': commentsCount,
+      'selfLiked': selfLiked,
+      'user': user?.toJson(), // assuming User has a proper toJson method
+    };
   }
 }

@@ -2,27 +2,26 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/api.dart';
-import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/constant/route.dart';
-import 'package:flutter_blog_app/models/api_response.dart';
-import 'package:flutter_blog_app/models/post.dart';
-import 'package:flutter_blog_app/services/post_service.dart';
-import 'package:flutter_blog_app/services/user_service.dart';
+import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
+import 'package:flutter_blog_app/utils/api_response.dart';
+import 'package:flutter_blog_app/features/posts/model/post.dart';
 import 'package:flutter_blog_app/features/posts/widgets/custom_text_field_widget.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CreatePostView extends StatefulWidget {
+class CreatePostView extends ConsumerStatefulWidget {
   final Post? post;
   final String? title;
 
   const CreatePostView({super.key, this.post, this.title});
 
   @override
-  State<CreatePostView> createState() => _CreatePostViewState();
+  _CreatePostViewState createState() => _CreatePostViewState();
 }
 
-class _CreatePostViewState extends State<CreatePostView> {
+class _CreatePostViewState extends ConsumerState<CreatePostView> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   late final TextEditingController _postTitle;
   final QuillController _textEditorController = QuillController.basic();
@@ -39,50 +38,50 @@ class _CreatePostViewState extends State<CreatePostView> {
       });
     }
   }
-  void _createPost() async{
-    String? image = _imageFile == null ? null : getStringImage(_imageFile);
-    Post post = Post();
-    post.title = _postTitle.text;
-    post.body = _textEditorController.document.toPlainText();
-    post.image = image;
+  // void _createPost() async{
+  //   String? image = _imageFile == null ? null : getStringImage(_imageFile);
+  //   Post post = Post();
+  //   post.title = _postTitle.text;
+  //   post.body = _textEditorController.document.toPlainText();
+  //   post.image = image;
     
-    ApiResponse response = 
+  //   ApiResponse response = await createPost(post);
 
-    if(response.error == null){
-      Navigator.of(context).pop();
-    }
-    else if(response.error == unauthorized){
-      navigatorPushNamedAndRemoveUntil(context, loginRoute);
-    }
-    else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-      setState(() {
-        _loading = !_loading;
-      });
-    }
-  }
+  //   if(response.error == null){
+  //     Navigator.of(context).pop();
+  //   }
+  //   else if(response.error == unauthorized){
+  //     navigatorPushNamedAndRemoveUntil(context, loginRoute);
+  //   }
+  //   else{
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('${response.error}')
+  //     ));
+  //     setState(() {
+  //       _loading = !_loading;
+  //     });
+  //   }
+  // }
 
-  void _editPost(int postId) async{
+  // void _editPost(int postId) async{
     
-    //ApiResponse response = await editPost(postId, _postBody.text);
+  //   //ApiResponse response = await editPost(postId, _postBody.text);
 
-    if(response.error == null){
-      Navigator.of(context).pop();
-    }
-    else if(response.error == unauthorized){
-      navigatorPushNamedAndRemoveUntil(context, loginRoute);
-    }
-    else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}')
-      ));
-      setState(() {
-        _loading = !_loading;
-      });
-    }
-  }
+  //   if(response.error == null){
+  //     Navigator.of(context).pop();
+  //   }
+  //   else if(response.error == unauthorized){
+  //     navigatorPushNamedAndRemoveUntil(context, loginRoute);
+  //   }
+  //   else{
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       content: Text('${response.error}')
+  //     ));
+  //     setState(() {
+  //       _loading = !_loading;
+  //     });
+  //   }
+  // }
 
   
   @override
@@ -106,16 +105,7 @@ class _CreatePostViewState extends State<CreatePostView> {
             icon: const Icon(Icons.check),
             onPressed: () {
               if(_formkey.currentState!.validate()){
-                setState(() {
-                  _loading = !_loading;
-                });
-                if(widget.post == null)
-                {
-                  _createPost();
-                }
-                else{
-                  _editPost(widget.post!.id ?? 0);
-                }
+                //ref.read(postsStoreProvider.)
               }
             },
           )

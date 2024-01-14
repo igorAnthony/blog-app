@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
-import 'package:flutter_blog_app/models/api_response.dart';
-import 'package:flutter_blog_app/models/user.dart';
+import 'package:flutter_blog_app/utils/token_storage.dart';
+import 'package:flutter_blog_app/utils/api_response.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,16 +16,6 @@ class LoginView extends ConsumerWidget {
   late final TextEditingController _password  = TextEditingController();
   final bool loading = false;
 
-  void _loginUser(ApiResponse response) async {
-    if(response.error == null){
-      _saveAndRedirectToHome(response.data as User);
-    }
-  }
-  void _saveAndRedirectToHome(User user) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('token', user.token ?? "0");
-    await pref.setInt('userId', user.id ?? 0);
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,7 +56,13 @@ class LoginView extends ConsumerWidget {
               loading ? const Center(child: CircularProgressIndicator(strokeWidth: 3,),) :
               kTextButton('Login', (){
                 if(formkey.currentState!.validate()){
-                  ref.read(userStoreProvider.notifier).login(_email.text, _password.text).then((value) => _loginUser(value));
+                  ref.read(userStoreProvider.notifier).login(_email.text, _password.text);
+                  TokenStorage tokenStorage = TokenStorage();
+                  tokenStorage.getToken().then((value) {
+                    if (value != null) {
+                      Navigator.of(context).pushReplacementNamed(homeRoute);
+                    }
+                  });
                 }
               }),
               const Spacer(),

@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_blog_app/constant/api.dart';
-import 'package:flutter_blog_app/features/utils/token_storage.dart';
-import 'package:flutter_blog_app/models/api_response.dart';
-import 'package:flutter_blog_app/models/user.dart';
+import 'package:flutter_blog_app/utils/token_storage.dart';
+import 'package:flutter_blog_app/utils/api_response.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,14 +20,17 @@ class UserRepository {
   Future<ApiResponse> login(String email, String password) async {
     ApiResponse apiResponse = ApiResponse();
     try {
-      final response = await Dio().post(baseURL + loginURL, data: {
+      final response = await Dio().post(loginURL, data: {
         'email' : email,
         'password' : password
       });
+      _token = await _tokenStorage.getToken();
       switch(response.statusCode) {
         case 200:
-          apiResponse.data = User.fromJson(jsonDecode(response.data));
-          await _tokenStorage.saveToken(jsonDecode(response.data)['token']);
+          apiResponse.data = User.fromJson(response.data);
+          await _tokenStorage.saveToken(response.data['token']);
+          SharedPreferences pref = await SharedPreferences.getInstance();
+          await pref.setInt('userId', response.data['user']['id']);
           break;
         case 401:
           apiResponse.error = 'Unauthorized';
@@ -46,11 +49,12 @@ class UserRepository {
   Future<ApiResponse> register(String name, String email, String password) async {
     ApiResponse apiResponse = ApiResponse();
     try {
-      final response = await Dio().post(baseURL + registerURL, data: {
+      final response = await Dio().post(registerURL, data: {
         'name' : name,
         'email' : email,
         'password' : password
       });
+      _token = await _tokenStorage.getToken();
       switch(response.statusCode) {
         case 200:
           apiResponse.data = User.fromJson(jsonDecode(response.data));
@@ -71,7 +75,8 @@ class UserRepository {
   Future<ApiResponse> deleteUser(String id) async {
     ApiResponse apiResponse = ApiResponse();
     try {
-      final response = await Dio().delete('$baseURL$userURL/$id', options: Options(
+      _token = await _tokenStorage.getToken();
+      final response = await Dio().delete('$userURL/$id', options: Options(
         headers: {
           'Accept' : 'application/json',
           'Authorization' : 'Bearer $_token'
@@ -93,10 +98,13 @@ class UserRepository {
     return apiResponse;        
   }
 
-  Future<ApiResponse> getUser() async {
-    ApiResponse apiResponse = ApiResponse();
+  Future<User> getUser() async {
+    int userId = await getUserId();
+    print("userId: $userId");
+    User user = User();
     try {
-      final response = await Dio().get(baseURL + userURL, options: Options(
+      _token = await _tokenStorage.getToken();
+      final response = await Dio().get('$userURL/$userId', options: Options(
         headers: {
           'Accept' : 'application/json',
           'Authorization' : 'Bearer $_token'
@@ -104,25 +112,30 @@ class UserRepository {
       ));
       switch(response.statusCode) {
         case 200:
-          apiResponse.data = User.fromJson(jsonDecode(response.data));
+          if (response.data != null && response.data['user'] != null) {
+            print("response.data['user']: ${response.data['user']}");
+            user = User.fromJson(response.data['user']);
+          } else {
+            print('User data is null or missing');
+          }
           break;
         case 401:
-          apiResponse.error = 'Unauthorized';
+          print('Unauthorized');
           break;
         default:
-          apiResponse.error = 'Error';
+          print('Error');
           break;
       }
-    } catch (e) {
-      rethrow;
-    }    
-    return apiResponse;
+    } catch(e){
+      print('Error: $e');
+    }  
+    return user;
   }
   
   Future<ApiResponse> updateUser(User updatedUser) async {
     ApiResponse apiResponse = ApiResponse();
     try {
-      final response = await Dio().put(baseURL + userURL, data: User.toJson(updatedUser), options: Options(
+      final response = await Dio().put(userURL, data: updatedUser.toJson(), options: Options(
         headers: {
           'Accept' : 'application/json',
           'Authorization' : 'Bearer $_token'

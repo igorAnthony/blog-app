@@ -5,6 +5,7 @@ const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
 const postsURL = baseURL + '/posts';
 const commentsURL = baseURL + '/comments';
+const categoriesURL = baseURL + '/categories';
 
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';

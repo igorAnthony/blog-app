@@ -1,6 +1,6 @@
 import 'package:flutter_blog_app/features/auth/store/user_repository.dart';
-import 'package:flutter_blog_app/models/api_response.dart';
-import 'package:flutter_blog_app/models/user.dart';
+import 'package:flutter_blog_app/utils/api_response.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_store.g.dart';
@@ -10,12 +10,14 @@ enum Status { initial, loading, loaded, error }
 @Riverpod(keepAlive: true)
 class UserStore extends _$UserStore{
   late UserRepository _userRepository;
+  bool _loading = false;
 
   @override
   Future<User> build() async {
+    _loading = true;
     _userRepository = UserRepository();
-    ApiResponse apiResponse = await _userRepository.getUser().then((value) => value);
-    User user = apiResponse.data as User;
+    User user = await _userRepository.getUser().then((value) => value);
+    _loading = false;
     return user;
   }
 

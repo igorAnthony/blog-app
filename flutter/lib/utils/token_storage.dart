@@ -15,3 +15,4 @@ class TokenStorage {
     await _storage.delete(key: 'auth_token');
   }
 }
+

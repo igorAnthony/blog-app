@@ -6,8 +6,8 @@ import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/features/auth/store/user_repository.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
-import 'package:flutter_blog_app/models/api_response.dart';
-import 'package:flutter_blog_app/models/user.dart';
+import 'package:flutter_blog_app/utils/api_response.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -67,7 +67,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userStoreProvider);
-    return _loading? const Center(child: CircularProgressIndicator(),)
+    return user.asData?.isLoading ?? true ? const Center(child: CircularProgressIndicator(),)
     : Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Column(

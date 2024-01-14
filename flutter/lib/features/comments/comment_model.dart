@@ -1,4 +1,4 @@
-import 'package:flutter_blog_app/models/user.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 
 class Comment {
   int? id;
