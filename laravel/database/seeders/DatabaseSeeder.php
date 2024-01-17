@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $category = new \App\Models\CategoryTech();
         $category->name = 'IA & VR';
         $category->description = 'Notícias sobre inteligência artificial e realidade virtual';
-        $category->image = 'http://192.168.1.6:8000/storage/categories/cyber_segurancao.jpeg';
+        $category->image = 'http://192.168.1.6:8000/storage/categories/cyber_seguranca.jpeg';
         $category->save();
 
         $category = new \App\Models\CategoryTech();
@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         $category = new \App\Models\CategoryTech();
         $category->name = 'Sustent. Tech';
         $category->description = 'Notícias sobre sustentabilidade relacionada a tecnologia';
-        $category->image = 'http://192.168.1.6:8000/storage/categories/sustentabilidade_tech.jpg';
+        $category->image = 'http://192.168.1.6:8000/storage/categories/sustentabilidade_tech.jpeg';
         $category->save();
 
         $category = new \App\Models\CategoryTech();
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
         $category = new \App\Models\CategoryTech();
         $category->name = 'Games';
         $category->description = 'Notícias sobre jogos';
-        $category->image = 'http://192.168.1.6:8000/storage/categories/astronauta3.jpg';
+        $category->image = 'http://192.168.1.6:8000/storage/categories/astronauta3.jpeg';
         $category->save();
 
         $user = new \App\Models\User();
