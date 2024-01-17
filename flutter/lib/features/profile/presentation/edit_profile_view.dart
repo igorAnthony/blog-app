@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
-import 'package:flutter_blog_app/utils/utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 
 class EditProfileView extends ConsumerWidget {
   const EditProfileView({super.key});

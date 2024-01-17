@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
 import 'package:flutter_blog_app/features/categories/category_store.dart';
 import 'package:flutter_blog_app/features/home/carousel_categories_widget.dart';
+import 'package:flutter_blog_app/features/posts/widgets/no_data_widget.dart';
 import 'package:flutter_blog_app/features/posts/widgets/post_list_widget.dart';
 import 'package:flutter_blog_app/features/posts/presentation/post_list_view.dart';
 import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
@@ -71,7 +72,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 ),
                 Expanded(child: Container(
                   margin: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
-                  child: const PostListWidget()
+                  child: postRef.value!.isNotEmpty ? const PostListWidget() : const NoDataWidget(),
                   )
                 )
               ],

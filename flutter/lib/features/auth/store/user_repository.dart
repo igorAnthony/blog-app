@@ -19,6 +19,7 @@ class UserRepository {
 
   Future<User> login(String email, String password) async {
     User user = User();
+    SharedPreferences pref = await SharedPreferences.getInstance();
     try {
       final response = await Dio().post(loginURL, data: {
         'email' : email,
@@ -29,8 +30,7 @@ class UserRepository {
         case 200:
           user = User.fromJson(response.data['user']);
           await _tokenStorage.saveToken(response.data['token']);
-          SharedPreferences pref = await SharedPreferences.getInstance();
-          await pref.setInt('userId', response.data['user']['id']);
+          await pref.setString('user', jsonEncode(response.data['user']));
           break;
         case 401:
           print('Unauthorized');
@@ -98,19 +98,22 @@ class UserRepository {
     return apiResponse;        
   }
 
-  Future<User> getUser(int? userId) async {
+  Future<User> getUser(int? userId, String token) async {
     User user = User();
     if(userId == null) {
       return user;
     }
     try {
-      _token = await _tokenStorage.getToken();
-      final response = await Dio().get('$userURL/$userId', options: Options(
+      print("$token");
+      print("$userId");
+      final response = await Dio().get('$userURL/$userId',   
+      options: Options(
         headers: {
           'Accept' : 'application/json',
-          'Authorization' : 'Bearer $_token'
+          'Authorization' : 'Bearer $token'
         }
       ));
+      print(response);
       switch(response.statusCode) {
         case 200:
           if (response.data != null && response.data['user'] != null) {

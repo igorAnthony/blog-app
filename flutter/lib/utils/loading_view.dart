@@ -27,7 +27,11 @@ class _LoadingViewState extends ConsumerState<LoadingView> {
           return LoginView();
         }
       }, 
-      error: (error, stack) => LoginView(), 
+      error: (error, stack){ 
+        print('$error');
+        print("$stack");
+        return LoginView();
+      }, 
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator(),),)
     );
   }

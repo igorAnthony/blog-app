@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/features/auth/store/user_repository.dart';
 import 'package:flutter_blog_app/utils/api_response.dart';
@@ -5,6 +8,7 @@ import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_blog_app/utils/token_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'user_store.g.dart';
 
@@ -20,8 +24,12 @@ class UserStore extends _$UserStore{
   Future<User> build() async {
     loading = true;
     _userRepository = UserRepository();
-    String? token = await TokenStorage().getToken();
-    User user = token != null ? await _userRepository.getUser(state.value!.id) : User();
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    User user = User();
+    print(pref.containsKey('user'));
+    if(pref.containsKey('user')) {
+      user = User.fromJson(jsonDecode(pref.getString("user")!));
+    }
     isLogged = user.id != null;
     loading = false;
     return user;
