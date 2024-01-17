@@ -16,20 +16,45 @@ class UserStoryWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: const EdgeInsets.only(right: 10),
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Colors.amber,
-            image: story.imageUrl != null
-                ? DecorationImage(
-                    image: NetworkImage('${story.imageUrl}'),
-                    fit: BoxFit.cover,
-                  )
-                : null,
-          ),
-        ),
+  margin: const EdgeInsets.only(right: 10),
+  padding: const EdgeInsets.all(2),
+  width: 65, // Aumente o tamanho do container externo
+  height: 65, // Aumente o tamanho do container externo
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(22),
+    gradient: LinearGradient(
+      colors: [
+        //creaate a harmonius gradient
+        Colors.purple,
+        Colors.blue,
+        Colors.green,
+        Colors.yellow,
+        Colors.orange,
+        Colors.red,
+      ], // Adicione as cores do gradiente aqui
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+  ),
+  child: Container(
+    width: 60, // Tamanho original do container
+    height: 60, // Tamanho original do container
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22),
+      color: Colors.white,
+      border: Border.all(
+        width: 4,
+        color: Colors.white,
+      ),
+      image: story.imageUrl != null
+          ? DecorationImage(
+              image: NetworkImage('${story.imageUrl}'),
+              fit: BoxFit.cover,
+            )
+          : null,
+    ),
+  ),
+),
         const SizedBox(height: 5),
         Align(
           alignment: Alignment.center,

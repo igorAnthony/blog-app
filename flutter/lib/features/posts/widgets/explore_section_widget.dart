@@ -12,12 +12,13 @@ class ExploreSection extends StatelessWidget {
       padding: const EdgeInsets.only(left: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 8),
           const Text("Explore today's", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
           //horizontal list show a list of users
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
+            margin: EdgeInsets.only(top: 10),
+            width: MediaQuery.of(context).size.width,
             height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,

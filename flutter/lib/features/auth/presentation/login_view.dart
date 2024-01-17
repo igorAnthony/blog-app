@@ -54,10 +54,9 @@ class LoginView extends ConsumerWidget {
               kTextButton('Login', (){
                 if(formkey.currentState!.validate()){
                   ref.read(userStoreProvider.notifier).login(_email.text, _password.text);
-                  TokenStorage tokenStorage = TokenStorage();
-                  tokenStorage.getToken().then((value) {
-                    if (value != null) {
-                      Navigator.of(context).pushReplacementNamed(homeRoute);
+                  ref.watch(userStoreProvider).whenData((value) {
+                    if(value.id != null){
+                      navigatorPushNamedAndRemoveUntil(context, mainLayoutRoute);
                     }
                   });
                 }

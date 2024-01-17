@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/features/auth/store/user_repository.dart';
 import 'package:flutter_blog_app/utils/api_response.dart';
 import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_blog_app/utils/token_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_store.g.dart';
@@ -11,19 +13,17 @@ enum Status { initial, loading, loaded, error }
 @Riverpod(keepAlive: true)
 class UserStore extends _$UserStore{
   late UserRepository _userRepository;
-  bool _loading = false;
-  bool get loading => _loading;
-
-  bool get isLogged => state.value?.id != null;
-
+  bool loading = false;
+  bool isLogged = false;
 
   @override
   Future<User> build() async {
-    _loading = true;
+    loading = true;
     _userRepository = UserRepository();
     String? token = await TokenStorage().getToken();
-    User user = token != null ? await _userRepository.getUser().then((value) => value) : User();
-    _loading = false;
+    User user = token != null ? await _userRepository.getUser(state.value!.id) : User();
+    isLogged = user.id != null;
+    loading = false;
     return user;
   }
 
@@ -43,9 +43,16 @@ class UserStore extends _$UserStore{
     state = AsyncValue.data(User());
   }
 
-  Future<ApiResponse> updateProfile(User user) async {
-    ApiResponse apiResponse = await _userRepository.updateUser(user).then((value) => value);
-    return apiResponse;
+  Future<void> updateProfile(User user) async {
+    String message = await _userRepository.updateUser(user);
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0
+    );
   }
-
 }

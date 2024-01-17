@@ -98,9 +98,11 @@ class UserRepository {
     return apiResponse;        
   }
 
-  Future<User> getUser() async {
-    int userId = await getUserId();
+  Future<User> getUser(int? userId) async {
     User user = User();
+    if(userId == null) {
+      return user;
+    }
     try {
       _token = await _tokenStorage.getToken();
       final response = await Dio().get('$userURL/$userId', options: Options(
@@ -130,8 +132,8 @@ class UserRepository {
     return user;
   }
   
-  Future<ApiResponse> updateUser(User updatedUser) async {
-    ApiResponse apiResponse = ApiResponse();
+  Future<String> updateUser(User updatedUser) async {
+    String message = '';
     try {
       final response = await Dio().put(userURL, data: updatedUser.toJson(), options: Options(
         headers: {
@@ -141,24 +143,19 @@ class UserRepository {
       ));
       switch(response.statusCode) {
         case 200:
-          apiResponse.data = User.fromJson(jsonDecode(response.data));
+          message = 'User updated successfully';
           break;
         case 401:
-          apiResponse.error = 'Unauthorized';
+          message = 'Unauthorized';
           break;
         default:
-          apiResponse.error = 'Error';
+          message = 'Error';
           break;
       }
     } catch (e) {
       rethrow;
     }  
-    return apiResponse;  
-  }
-
-  Future<int> getUserId() async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getInt('userId') ?? 0;
+    return message;
   }
 
   Future<bool> logout() async{

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/text_theme.dart';
 
-InputDecoration kInputDecoration(String label) {
+InputDecoration kInputDecoration(String label, {TextStyle? style, bool isLabel = true}) {
   return InputDecoration(
-      labelText: label,
+      labelText: isLabel ? label : null,
       contentPadding: const EdgeInsets.all(10),
       border: const OutlineInputBorder(
           borderSide: BorderSide(

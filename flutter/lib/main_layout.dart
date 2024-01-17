@@ -29,7 +29,32 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
         backgroundColor: AppColors.darkBlueColor,
         foregroundColor: Colors.white,
         onPressed: () {
-          navigatorPushNamed(context, createPostRoute);
+          showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.add),
+              title: Text('Adicionar Story'),
+              onTap: () {
+                // Adicione a ação que você deseja realizar quando o botão for pressionado
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.post_add),
+              title: Text('Criar Post'),
+              onTap: () {
+                navigatorPushNamed(context, createPostRoute);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
         },
         child: const Icon(
           Icons.add,

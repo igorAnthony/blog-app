@@ -6,6 +6,7 @@ import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/constant/text_theme.dart';
 import 'package:flutter_blog_app/features/auth/presentation/login_view.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
+import 'package:flutter_blog_app/features/profile/presentation/edit_profile_view.dart';
 import 'package:flutter_blog_app/utils/loading_view.dart';
 import 'package:flutter_blog_app/features/posts/presentation/create_post_view.dart';
 import 'package:flutter_blog_app/main_layout.dart';
@@ -24,23 +25,22 @@ class _BlogApp extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    bool isLogged = ref.read(userStoreProvider.notifier).isLogged;
-
     return MaterialApp(
       title: 'Flutter blog-app',
       theme: ThemeData(
         primaryColor: AppColors.darkBlueColor,
         textTheme: AppThemes.textTheme1,
       ),
-      home: isLogged ? const LoadingView() : LoginView(),
+      home: const LoadingView(),
       darkTheme: ThemeData.dark(),
       routes: 
         {
           loginRoute: (context) => LoginView(),
           registerRoute: (context) => RegisterView(),
           homeRoute: (context) => const HomeView(),
-          dashboardRoute: (context) => const MainLayout(),
+          mainLayoutRoute: (context) => const MainLayout(),
           createPostRoute: (context) => const CreatePostView(),
+          editProfileRoute: (context) => const EditProfileView(),
         }
     );
   }

@@ -6,8 +6,9 @@ const homeRoute  ='/home';
 const createPostRoute = '/posts/create';
 const editPostRoute = '/posts/create';
 const commentsRoute = '/comments';
-const dashboardRoute = '/dashboard';
+const mainLayoutRoute = '/main-layout';
 const story = '/story';
+const editProfileRoute = '/edit-profile';
 
 
 

@@ -23,24 +23,21 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
     
     final postRef = ref.watch(postsStoreProvider(categoryId: widget.categoryId, userId: widget.userId));
     return SingleChildScrollView(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: postRef.value?.length ?? 0,
-          itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              child: CardPostWidget(
-                post: postRef.value?[index] ?? Post(), 
-                onLikeDislike: (postId) {
-                  if(postRef.value != null ) ref.read(postsStoreProvider().notifier).likeDislikePost(index);
-                },
-              ),
-            );
-          },
-        ),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: postRef.value?.length ?? 0,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            child: CardPostWidget(
+              post: postRef.value?[index] ?? Post(), 
+              onLikeDislike: (postId) {
+                if(postRef.value != null ) ref.read(postsStoreProvider().notifier).likeDislikePost(index);
+              },
+            ),
+          );
+        },
       ),
     );
   }
