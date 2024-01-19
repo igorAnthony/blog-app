@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class StoryView extends StatelessWidget {
+class OpenedStoryView extends StatelessWidget {
   final String imageUrl;
   final String name;
   final String? avatarUrl;
 
-  const StoryView({
+  const OpenedStoryView({
     required this.imageUrl,
     required this.name,
     required this.avatarUrl,
@@ -14,8 +14,7 @@ class StoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    return Stack(
         children: [
           Image.network(
             imageUrl,
@@ -55,7 +54,6 @@ class StoryView extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }

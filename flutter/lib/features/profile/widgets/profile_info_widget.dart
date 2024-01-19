@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/colors.dart';
+import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
 import 'package:flutter_blog_app/utils/utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +33,7 @@ class ProfileInfoWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
                   child: Container(
@@ -58,8 +60,8 @@ class ProfileInfoWidget extends ConsumerWidget {
                           color: Colors.purpleAccent),
                     ),
                   ),
-                  onTap: () {
-                    getImage();
+                  onTap: () async {
+                  
                   },
                 ),
                 const SizedBox(
@@ -92,6 +94,20 @@ class ProfileInfoWidget extends ConsumerWidget {
                     )
                   ],
                 ),
+                //edit profile
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(editProfileRoute);
+                  },
+                  child: Container(
+                    child: const Icon(
+                      Icons.edit,
+                      color: AppColors.darkBlueColor,
+                      size: 30,
+                    ),
+                  ),
+                )
               ],
             ),
             const SizedBox(

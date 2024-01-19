@@ -1,30 +1,34 @@
 class Story {
+  final int? id;
   final String? name;
   final String? imageUrl;
-  final int? id;
+  final int? userId;
   final bool? isViewed;
 
   const Story({
-    required this.name,
-    required this.imageUrl,
     this.id,
+    this.name,
+    this.imageUrl,
+    this.userId,
     this.isViewed,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
     return Story(
+      id: json['id'] as int,
       name: json['name'] as String,
       imageUrl: json['imageUrl'] as String,
-      id: json['id'] as int,
+      userId: json['userId'] as int,
       isViewed: json['isViewed'] as bool,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'imageUrl': imageUrl,
-      'id': id,
+      'userId': userId,
       'isViewed': isViewed,
     };
   }

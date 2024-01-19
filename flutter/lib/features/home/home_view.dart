@@ -72,7 +72,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 ),
                 Expanded(child: Container(
                   margin: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
-                  child: postRef.value!.isNotEmpty ? const PostListWidget() : const NoDataWidget(),
+                  child: const PostListWidget() 
                   )
                 )
               ],

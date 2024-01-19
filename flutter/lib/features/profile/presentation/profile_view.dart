@@ -18,6 +18,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userStoreProvider);
+    
     return Scaffold(
       body: user.asData?.isLoading ?? true ? const Center(child: CircularProgressIndicator(),)
     : Container(
@@ -26,6 +27,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 10,),
             ProfileHeaderWidget(),
             const SizedBox(height: 30,),
             ProfileInfoWidget(),   

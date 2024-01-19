@@ -163,7 +163,10 @@ class UserRepository {
 
   Future<bool> logout() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return await pref.remove('token');
+    await pref.remove('user');
+    await pref.remove('categories');
+    await _tokenStorage.deleteToken();
+    return true;
   }
 
   

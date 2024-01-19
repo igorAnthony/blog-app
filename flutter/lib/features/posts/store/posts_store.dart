@@ -1,6 +1,5 @@
 import 'package:flutter_blog_app/features/posts/store/posts_repository.dart';
 import 'package:flutter_blog_app/features/posts/model/post.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'posts_store.g.dart';

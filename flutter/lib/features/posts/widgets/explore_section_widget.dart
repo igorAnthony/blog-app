@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/features/story/story_view.dart';
-import 'package:flutter_blog_app/features/story/story_widget.dart';
-import 'package:flutter_blog_app/features/story/story_model.dart';
+import 'package:flutter_blog_app/features/story/presentation/story_navigation.dart';
+import 'package:flutter_blog_app/features/story/widgets/user_avatar_story_widget.dart';
+import 'package:flutter_blog_app/features/story/model/story_model.dart';
 
 class ExploreSection extends StatelessWidget {
   const ExploreSection({super.key});
@@ -29,11 +29,7 @@ class ExploreSection extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => StoryView(
-                          imageUrl: 'https://picsum.photos/200/300?random=$index',
-                          name: 'User $index',
-                          avatarUrl: 'https://picsum.photos/200/300?random=$index',
-                        ),
+                        builder: (context) => StoryNavigation(index)
                       ),
                     );
                   },

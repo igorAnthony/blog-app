@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/features/posts/presentation/post_detail_view.dart';
 import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
 import 'package:flutter_blog_app/features/posts/widgets/card_post_widget.dart';
 import 'package:flutter_blog_app/features/posts/model/post.dart';
+import 'package:flutter_blog_app/features/posts/widgets/no_data_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PostListWidget extends ConsumerStatefulWidget {
@@ -22,7 +20,7 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
   Widget build(BuildContext context) {
     
     final postRef = ref.watch(postsStoreProvider(categoryId: widget.categoryId, userId: widget.userId));
-    return SingleChildScrollView(
+    return (postRef.value?.length ?? 0) > 0 ? SingleChildScrollView(
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -39,6 +37,6 @@ class _PostListWidgetState extends ConsumerState<PostListWidget> {
           );
         },
       ),
-    );
+    ): const NoDataWidget();
   }
 }

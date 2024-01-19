@@ -9,6 +9,8 @@ class User {
   String? createdAt;
   String? updatedAt;
   String? password;
+  List<User>? followers;
+  List<User>? following;
 
   User({
     this.id,
@@ -21,6 +23,8 @@ class User {
     this.password,
     this.createdAt,
     this.updatedAt,
+    this.followers,
+    this.following,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class User {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       password: json['password'],
+      followers: json['followers'] != null ? (json['followers'] as List).map((i) => User.fromJson(i)).toList() : null,
+      following: json['following'] != null ? (json['following'] as List).map((i) => User.fromJson(i)).toList() : null,
     );
   }
 
@@ -50,6 +56,8 @@ class User {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'password': password,
+      'followers': followers,
+      'following': following,
     };
   }
 }

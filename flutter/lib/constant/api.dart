@@ -6,6 +6,7 @@ const userURL = baseURL + '/user';
 const postsURL = baseURL + '/posts';
 const commentsURL = baseURL + '/comments';
 const categoriesURL = baseURL + '/categories';
+const storiesURL = baseURL + '/stories';
 
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';
