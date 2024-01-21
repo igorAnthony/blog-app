@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -56,8 +57,8 @@ class DatabaseSeeder extends Seeder
         $category->image = 'http://192.168.1.6:8000/storage/categories/astronauta3.jpeg';
         $category->save();
 
+        
         $user = new \App\Models\User();
-
         $user->name = 'Admin';
         $user->email = 'admin@gmail.com';
         $user->password = bcrypt('1qa2ws');
@@ -65,16 +66,34 @@ class DatabaseSeeder extends Seeder
         $user->about_me = 'Sou um administrador';
         $user->speciality = 'Flutter Developer';
         $user->save();
+        
+        $faker = Faker::create();
 
-        /*$table->id();
-            $table->integer('user_id');
-            $table->string('body');
-            $table->string('title');
-            $table->foreignId('category_tech_id')->nullable()->constrained('category_teches')->onDelete('cascade');
-            $table->string('image')->nullable();
-            $table->timestamps();
-        });*/
-        //create a post from admin with random data
+        for ($i = 0; $i < 10; $i++) {
+            $newUser = new \App\Models\User();
+            $newUser->name = $faker->name;
+            $newUser->email = $faker->email;
+            $newUser->password = bcrypt('1qa2ws');
+            $newUser->username = $faker->userName;
+            $newUser->about_me = $faker->sentence;
+            $newUser->speciality = $faker->jobTitle;
+            $newUser->save();
+                
+            $newFollow = new \App\Models\Follow();
+            $newFollow->follower_id = $newUser->id;
+            $newFollow->following_id = $user->id;
+            $newFollow->save();
+        
+            $newFollow2 = new \App\Models\Follow();
+            $newFollow2->follower_id = $user->id;
+            $newFollow2->following_id = $newUser->id;
+            $newFollow2->save();
+        }
+        
+        $user->save();
+
+
+
         
 
     }

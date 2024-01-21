@@ -10,7 +10,7 @@ class StoryController extends Controller
     public function one($id)
     {
         $story = Story::with('user:id,name,image')->find($id);
-        
+
         return response([
             'story' => $story
         ], 200);
@@ -18,14 +18,27 @@ class StoryController extends Controller
 
     public function all()
     {
-        //apenas pegue story apenas de quem o usuario segue de duração de no maximo de 24 horas e ordene por data de criação, traga o usuario que criou o story
-        $stories = Story::whereHas('user.followers', function ($q) {
-            $q->where('follower_id', auth()->user()->id);
-        })->where('created_at', '>=', now()->subHours(24))->with('user:id,name,image')->orderBy('created_at', 'desc')->get();
+        $stories = Story::whereHas('user.followers', function ($q) {$q->where('follower_id', auth()->user()->id);})
+            ->where('created_at', '>=', now()->subHours(24))
+            ->with('user:id,name,image')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy('user_id') // Agrupa as histórias por user_id
+            ->map(function ($userStories) { // Transforma cada grupo de histórias
+                return $userStories->map(function ($story) { // Transforma cada história
+                    return [
+                        'id' => $story->id,
+                        'user_id' => $story->user_id,
+                        'image' => $story->image,
+                        'timestamp' => $story->created_at->toIso8601String(), // Converte a data para o formato ISO 8601
+                    ];
+                })->all();
+            })->values(); // Reindexa os valores para remover as chaves de user_id
 
         return response([
             'stories' => $stories
         ], 200);
+
     }
     public function delete($id)
     {
