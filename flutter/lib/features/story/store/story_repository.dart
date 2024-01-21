@@ -11,8 +11,8 @@ class StoriesRepository {
   TokenStorage _tokenStorage = TokenStorage();
 
   //get post by user_id
-  Future<List<Story>> getStoryByUserId(int userId) async {
-    List<Story> posts = [];
+  Future<List<List<Story>>> getStoryByUserId(int userId) async {
+    List<List<Story>> stories = [];
     try{
       _token = await _tokenStorage.getToken();
       final response = await Dio().get('$storiesURL?user_id=$userId', 
@@ -27,10 +27,51 @@ class StoriesRepository {
       switch(response.statusCode) {
         case 200: 
           if(response.data == null) {
-            posts = [];
+            stories = [];
             break;
           }
-          posts = (response.data['posts'] as List).map((p) => Story.fromJson(p)).toList();
+          /* exemplo do retorno abaixo
+            {
+              "stories": [
+                [
+                  {
+                    "id": 1,
+                    "user_id": 101,
+                    "image": "https://example.com/image1.jpg",
+                    "timestamp": "2024-01-19T12:30:45Z"
+                  },
+                  {
+                    "id": 2,
+                    "user_id": 102,
+                    "image": "https://example.com/image2.jpg",
+                    "timestamp": "2024-01-19T13:15:20Z"
+                  }
+                ],
+                [
+                  {
+                    "id": 3,
+                    "user_id": 103,
+                    "image": "https://example.com/image3.jpg",
+                    "timestamp": "2024-01-19T14:45:10Z"
+                  },
+                  {
+                    "id": 4,
+                    "user_id": 104,
+                    "image": "https://example.com/image4.jpg",
+                    "timestamp": "2024-01-19T15:20:30Z"
+                  }
+                ]
+              ]
+            }
+
+          */
+          // stories = (response.data['stories'] as List).map((p) => Story.fromJson(p)).toList();
+          response.data['stories'].forEach(
+            (p){
+              stories.add((p as List).map((s) => Story.fromJson(s)).toList());
+            }
+          ).toList();
+          
           break;
         case 401:
           print('Unauthorized');
@@ -42,7 +83,7 @@ class StoriesRepository {
     } catch(e) {
       rethrow;
     }
-    return posts;
+    return stories;
   }
 
   Future<String> createStory(Story story) async {

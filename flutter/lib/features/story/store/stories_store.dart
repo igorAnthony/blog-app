@@ -8,12 +8,13 @@ part 'stories_store.g.dart';
 class StoriesStore extends _$StoriesStore{
   late StoriesRepository _storiesRepository;
   bool loading = false;
+  List<Story> currentUserStories = [];
 
   @override
-  Future<List<Story>> build(int userId) async {
+  Future<List<List<Story>>> build(int userId) async {
     loading = true;
     _storiesRepository = StoriesRepository();
-    List<Story> stories  = await _storiesRepository.getStoryByUserId(userId);
+    List<List<Story>> stories  = await _storiesRepository.getStoryByUserId(userId);
     loading = false;
     return stories;
   }
@@ -21,17 +22,13 @@ class StoriesStore extends _$StoriesStore{
   //create post
   Future<String> createStory(Story story) async {
     String responseStatus = await _storiesRepository.createStory(story);
-    responseStatus == '200' ? state.value!.add(story) : null;
+    responseStatus == '200' ? state.value![0].add(story) : null;
     return responseStatus;
   }
 
   //delete post
   Future<void> deleteStory(int storyId) async {
     await _storiesRepository.deleteStory(storyId);
-    state.value!.removeWhere((element) => element.id == storyId);
-  }
-  List<Story> getFriendStories(int friendId){
-    List<Story> stories = state.value!;
-    return stories.where((element) => element.userId == friendId).toList();        
+    state.value![0].removeWhere((element) => element.id == storyId);
   }
 }

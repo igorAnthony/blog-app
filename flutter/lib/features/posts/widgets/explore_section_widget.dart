@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blog_app/features/story/presentation/one_user_story_navigation_view.dart';
 import 'package:flutter_blog_app/features/story/presentation/story_navigation.dart';
+import 'package:flutter_blog_app/features/story/store/stories_store.dart';
 import 'package:flutter_blog_app/features/story/widgets/user_avatar_story_widget.dart';
 import 'package:flutter_blog_app/features/story/model/story_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ExploreSection extends StatelessWidget {
+class ExploreSection extends ConsumerWidget {
   const ExploreSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,  WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Column(
@@ -24,12 +27,13 @@ class ExploreSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: 10,
               itemBuilder: (context, index) {
+                List<Story> stories = ref.read(storiesStoreProvider(index)).value?[index] ?? [];
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => StoryNavigation(index)
+                        builder: (context) => OneUserStoryNavigationView(stories)
                       ),
                     );
                   },

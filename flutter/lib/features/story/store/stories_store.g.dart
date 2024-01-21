@@ -6,7 +6,7 @@ part of 'stories_store.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$storiesStoreHash() => r'8a719a5276ca9529396b5c96da47f0aacbec878a';
+String _$storiesStoreHash() => r'1030118d31338d6e01be03ad4302f6724d9ffdb1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,10 +30,10 @@ class _SystemHash {
 }
 
 abstract class _$StoriesStore
-    extends BuildlessAutoDisposeAsyncNotifier<List<Story>> {
+    extends BuildlessAutoDisposeAsyncNotifier<List<List<Story>>> {
   late final int userId;
 
-  FutureOr<List<Story>> build(
+  FutureOr<List<List<Story>>> build(
     int userId,
   );
 }
@@ -43,7 +43,7 @@ abstract class _$StoriesStore
 const storiesStoreProvider = StoriesStoreFamily();
 
 /// See also [StoriesStore].
-class StoriesStoreFamily extends Family<AsyncValue<List<Story>>> {
+class StoriesStoreFamily extends Family<AsyncValue<List<List<Story>>>> {
   /// See also [StoriesStore].
   const StoriesStoreFamily();
 
@@ -81,8 +81,8 @@ class StoriesStoreFamily extends Family<AsyncValue<List<Story>>> {
 }
 
 /// See also [StoriesStore].
-class StoriesStoreProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<StoriesStore, List<Story>> {
+class StoriesStoreProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    StoriesStore, List<List<Story>>> {
   /// See also [StoriesStore].
   StoriesStoreProvider(
     int userId,
@@ -113,7 +113,7 @@ class StoriesStoreProvider
   final int userId;
 
   @override
-  FutureOr<List<Story>> runNotifierBuild(
+  FutureOr<List<List<Story>>> runNotifierBuild(
     covariant StoriesStore notifier,
   ) {
     return notifier.build(
@@ -138,7 +138,7 @@ class StoriesStoreProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<StoriesStore, List<Story>>
+  AutoDisposeAsyncNotifierProviderElement<StoriesStore, List<List<Story>>>
       createElement() {
     return _StoriesStoreProviderElement(this);
   }
@@ -157,14 +157,15 @@ class StoriesStoreProvider
   }
 }
 
-mixin StoriesStoreRef on AutoDisposeAsyncNotifierProviderRef<List<Story>> {
+mixin StoriesStoreRef
+    on AutoDisposeAsyncNotifierProviderRef<List<List<Story>>> {
   /// The parameter `userId` of this provider.
   int get userId;
 }
 
 class _StoriesStoreProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<StoriesStore, List<Story>>
-    with StoriesStoreRef {
+    extends AutoDisposeAsyncNotifierProviderElement<StoriesStore,
+        List<List<Story>>> with StoriesStoreRef {
   _StoriesStoreProviderElement(super.provider);
 
   @override
