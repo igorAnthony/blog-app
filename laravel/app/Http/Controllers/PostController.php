@@ -54,6 +54,8 @@ class PostController extends Controller
         $post->title = $attrs['title'];
         $post->user_id = auth()->user()->id;
 
+        $image = $this->saveImage($request->image, 'profiles');
+        $post->image = $image;
         $post->save();
 
         return response([

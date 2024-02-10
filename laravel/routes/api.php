@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryTechController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\StoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,6 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     //user
     Route::get('/user', [AuthController::class, 'user']);
-    Route::get('/user/{id}', [AuthController::class,'getUser']);
     Route::put('/user', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -49,12 +49,16 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/posts/{id}/likes', [LikeController::class, 'likeOrUnlike']); //create comment on a post
 
     //story
-    Route::get('/stories', [StoryController::class, 'all']); //all stories
-    Route::get('/stories/{id}', [StoryController::class, 'one']); //get single story
-    Route::post('/stories', [StoryController::class, 'createStory']); //create story
+    //Route::get('/stories', [StoryController::class, 'all']); //all stories
+    Route::get('/stories', [StoryController::class, 'all']); //get single story
+    Route::post('/stories', [StoryController::class, 'create']); //create story
     Route::delete('/stories/{id}', [StoryController::class, 'delete']); //delete story
 
     //category
     Route::get('/categories', [CategoryTechController::class, 'all']); //all categories
     Route::get('/categories/{id}', [CategoryTechController::class, 'one']); //get single category
+
+    //follow
+    Route::post('/follow', [FollowController::class, 'follow']); //follow
+    Route::delete('/follow', [FollowController::class, 'unfollow']); //unfollow
 });

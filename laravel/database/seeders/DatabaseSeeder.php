@@ -65,6 +65,7 @@ class DatabaseSeeder extends Seeder
         $user->username = 'admin_oliveira';
         $user->about_me = 'Sou um administrador';
         $user->speciality = 'Flutter Developer';
+        $user->avatar = 'https://picsum.photos/200/300?random=$1';
         $user->save();
         
         $faker = Faker::create();
@@ -77,6 +78,7 @@ class DatabaseSeeder extends Seeder
             $newUser->username = $faker->userName;
             $newUser->about_me = $faker->sentence;
             $newUser->speciality = $faker->jobTitle;
+            $newUser->avatar = 'https://picsum.photos/200/300?random='. $i + 2;
             $newUser->save();
                 
             $newFollow = new \App\Models\Follow();
@@ -94,6 +96,61 @@ class DatabaseSeeder extends Seeder
 
 
 
+        $story = new \App\Models\Story();
+        $story->user_id = 1;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo1.jpeg';
+        $story->save();
+
+
+        $story = new \App\Models\Story();
+        $story->user_id = 1;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo2.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 2;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo3.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 3;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo3.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 4;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo4.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 5;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo5.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 6;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo6.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 7;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo7.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 7;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo8.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 1;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo9.jpeg';
+        $story->save();
+
+        $story = new \App\Models\Story();
+        $story->user_id = 7;
+        $story->image = 'http://192.168.1.6:8000/storage/stories/photo10.jpeg';
+        $story->save();
         
 
     }

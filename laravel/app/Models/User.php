@@ -25,19 +25,24 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'pivot'
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
     
-    public function followers()
+    public function stories()
     {
-        return $this->hasMany(Follow::class, 'following_id', 'id');
+       return $this->hasMany(Story::class);
     }
 
     public function followings()
     {
-        return $this->hasMany(Follow::class, 'follower_id', 'id');
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+    }
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
     }
 }

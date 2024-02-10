@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('image')->nullable();
+            $table->string('avatar')->nullable();
             $table->string('about_me')->nullable();
             $table->string('speciality')->nullable();
             $table->string('username')->nullable();

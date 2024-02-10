@@ -12,7 +12,6 @@ class AuthController extends Controller
     //register
     public function register(Request $request)
     {
-        Log::info("entrei");
         $attrs = $request ->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
@@ -54,6 +53,7 @@ class AuthController extends Controller
             'token' => auth()->user()->createToken('secret')->plainTextToken
         ], 200);
     }
+    
     //logout user
     public function logout(){
         auth()->user()->tokens()->delete();
@@ -64,12 +64,18 @@ class AuthController extends Controller
 
     public function user()
     {
-        $user = auth()->user()->with('followers', 'followings')->find(auth()->user()->id);
+        $user = User::with([
+            'followers:id,name,image',
+            'followings:id,name,image',
+        ])->find(auth()->user()->id);
 
         return response([
             'user' => $user
         ], 200);
     }
+
+
+
     //get user by id
     public function getUser($id)
     {

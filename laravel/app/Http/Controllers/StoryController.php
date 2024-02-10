@@ -2,44 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Follow;
 use App\Models\Story;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class StoryController extends Controller
 {
-    public function one($id)
-    {
-        $story = Story::with('user:id,name,image')->find($id);
-
-        return response([
-            'story' => $story
-        ], 200);
-    }
-
     public function all()
     {
-        $stories = Story::whereHas('user.followers', function ($q) {$q->where('follower_id', auth()->user()->id);})
-            ->where('created_at', '>=', now()->subHours(24))
-            ->with('user:id,name,image')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->groupBy('user_id') // Agrupa as histórias por user_id
-            ->map(function ($userStories) { // Transforma cada grupo de histórias
-                return $userStories->map(function ($story) { // Transforma cada história
-                    return [
-                        'id' => $story->id,
-                        'user_id' => $story->user_id,
-                        'image' => $story->image,
-                        'timestamp' => $story->created_at->toIso8601String(), // Converte a data para o formato ISO 8601
-                    ];
-                })->all();
-            })->values(); // Reindexa os valores para remover as chaves de user_id
+        $user = auth()->user();
+
+        $stories = Follow::with('stories')
+            ->leftJoin('users', 'follows.following_id', '=', 'users.id')
+            ->where('follower_id', $user->id)->get();
+
+        
+        //add user autenticate stories
+        $authUserStories = User::with('stories')
+            ->find($user->id);
+        $data = new \stdClass();
+        $data->friends = $stories->values();
+
+        $data->current_user_stories = $authUserStories->stories;
 
         return response([
-            'stories' => $stories
+            'stories' => $data
         ], 200);
-
     }
+    
     public function delete($id)
     {
         $story = Story::find($id);

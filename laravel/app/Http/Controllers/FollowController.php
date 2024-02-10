@@ -15,7 +15,7 @@ class FollowController extends Controller
         $follow->save();
 
         return response([
-            'message' => 'Follow created.',
+            'message' => 'Followed.',
             'follow' => $follow
         ], 200);
     }
@@ -25,20 +25,8 @@ class FollowController extends Controller
         $follow->delete();
 
         return response([
-            'message' => 'Follow deleted.',
+            'message' => 'Unfollowed.',
             'follow' => $follow
         ], 200);
-    }
-    public function followers()
-    {
-        return response([
-            'followers' => auth()->user()->followers()->with('user:id,name,image')->get()
-        ], 200);
-    }
-    public function followings()
-    {
-        return response([
-            'followings' => auth()->user()->followings()->with('user:id,name,image')->get()
-        ], 200);
-    }
+    }    
 }
