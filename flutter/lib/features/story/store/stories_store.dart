@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
+import 'package:flutter_blog_app/features/story/model/list_story_model.dart';
 import 'package:flutter_blog_app/features/story/model/story_model.dart';
 import 'package:flutter_blog_app/features/story/store/story_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,13 +11,18 @@ part 'stories_store.g.dart';
 class StoriesStore extends _$StoriesStore{
   late StoriesRepository _storiesRepository;
   bool loading = false;
-  List<Story> currentUserStories = [];
+
+  ListStory currentUserStories = ListStory();
 
   @override
-  Future<List<List<Story>>> build(int userId) async {
+  Future<List<ListStory>> build(User user) async {
     loading = true;
     _storiesRepository = StoriesRepository();
-    List<List<Story>> stories  = await _storiesRepository.getStoryByUserId(userId);
+
+    List<ListStory> stories  = await _storiesRepository.getStoryByUserId(user);
+
+    //get current user stories where user_id == userId
+    currentUserStories = stories[0];  
     loading = false;
     return stories;
   }
@@ -29,6 +37,12 @@ class StoriesStore extends _$StoriesStore{
   //delete post
   Future<void> deleteStory(int storyId) async {
     await _storiesRepository.deleteStory(storyId);
-    state.value![0].removeWhere((element) => element.id == storyId);
+    state.value![0].removeStory(storyId);
+    
+  }
+
+  //get stories
+  List<ListStory> getStories() {
+    return state.value ?? [];
   }
 }

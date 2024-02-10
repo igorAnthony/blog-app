@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/features/story/presentation/one_user_story_navigation_view.dart';
-import 'package:flutter_blog_app/features/story/presentation/story_navigation.dart';
-import 'package:flutter_blog_app/features/story/store/stories_store.dart';
-import 'package:flutter_blog_app/features/story/widgets/user_avatar_story_widget.dart';
 import 'package:flutter_blog_app/features/story/model/story_model.dart';
+import 'package:flutter_blog_app/features/story/presentation/one_user_story_navigation_view.dart';
+import 'package:flutter_blog_app/features/story/widgets/user_avatar_story_widget.dart';
+import 'package:flutter_blog_app/features/story/model/list_story_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExploreSection extends ConsumerWidget {
-  const ExploreSection({super.key});
+  final List<ListStory> listStories;
+  const ExploreSection({required this.listStories, super.key});
 
   @override
   Widget build(BuildContext context,  WidgetRef ref) {
@@ -20,14 +20,14 @@ class ExploreSection extends ConsumerWidget {
           const Text("Explore today's", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
           //horizontal list show a list of users
           Container(
-            margin: EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10),
             width: MediaQuery.of(context).size.width,
-            height: 100,
+            height: 120,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: listStories.length,
               itemBuilder: (context, index) {
-                List<Story> stories = ref.read(storiesStoreProvider(index)).value?[index] ?? [];
+                ListStory stories = listStories[index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -38,9 +38,10 @@ class ExploreSection extends ConsumerWidget {
                     );
                   },
                   child: UserStoryWidget(
-                    story: Story(
-                      name: 'User $index',
-                      imageUrl: 'https://picsum.photos/200/300?random=$index',
+                    story: ListStory(
+                      name: stories.name,
+                      avatar: stories.avatar,
+                      stories: stories.stories,
                     ),
                   ),
                 );

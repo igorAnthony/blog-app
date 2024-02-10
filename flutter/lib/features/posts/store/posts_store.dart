@@ -54,11 +54,7 @@ class PostsStore extends _$PostsStore{
   }
 
   //get posts
-  Future<void> getPosts() async {
-    loading = true;
-    _postsRepository = PostsRepository();
-    List<Post> posts  = await _postsRepository.getPosts();
-    state = AsyncValue.data(posts);
-    loading = false;
+  List<Post> getPosts() {
+    return state.value!;    
   }
 }

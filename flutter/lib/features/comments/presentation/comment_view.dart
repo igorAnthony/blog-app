@@ -142,8 +142,8 @@ class _CommentViewState extends  ConsumerState<CommentView> {
                                   width: 30,
                                   height: 30, 
                                   decoration: BoxDecoration(
-                                    image: comment.user!.image != null ? DecorationImage(
-                                      image: NetworkImage('${comment.user!.image}'),
+                                    image: comment.user!.avatar != null ? DecorationImage(
+                                      image: NetworkImage('${comment.user!.avatar}'),
                                       fit: BoxFit.cover
                                     ) : null,
                                     borderRadius: BorderRadius.circular(15),

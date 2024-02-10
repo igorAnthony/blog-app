@@ -21,15 +21,17 @@ class _LoadingViewState extends ConsumerState<LoadingView> {
     //retorna o login apenas se eu tiver id do meu usuario, se não gostaria de ficasse em loading, se retorna falso ele vai para o login
     return isLogged.when(
       data: (data){
+        print('erro1');
         if(data.id != null){
+
           return const MainLayout();
         }else{
+          print('teste2');
           return LoginView();
         }
       }, 
       error: (error, stack){ 
-        print('$error');
-        print("$stack");
+        print('deu erro');
         return LoginView();
       }, 
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator(),),)

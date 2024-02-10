@@ -3,9 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/colors.dart';
 import 'package:flutter_blog_app/constant/route.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
+import 'package:flutter_blog_app/features/categories/category_model.dart';
+import 'package:flutter_blog_app/features/categories/category_store.dart';
 import 'package:flutter_blog_app/features/home/home_view.dart';
+import 'package:flutter_blog_app/features/posts/model/post.dart';
+import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
 import 'package:flutter_blog_app/features/profile/presentation/profile_view.dart';
+import 'package:flutter_blog_app/features/story/model/list_story_model.dart';
+import 'package:flutter_blog_app/features/story/store/stories_store.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MainLayout extends ConsumerStatefulWidget {
@@ -20,11 +27,12 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final userStore = ref.read(userStoreProvider);
+    final user = userStore.value!;
     return Scaffold(
       body: currentIndex == 0
           ? const SafeArea(child: HomeView())
-          : const SafeArea(child: ProfileView()),
+          : SafeArea(child: ProfileView(user: user)),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.darkBlueColor,
         foregroundColor: Colors.white,
@@ -39,8 +47,7 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
               leading: Icon(Icons.add),
               title: Text('Adicionar Story'),
               onTap: () {
-                // Adicione a ação que você deseja realizar quando o botão for pressionado
-                Navigator.pop(context);
+                //
               },
             ),
             ListTile(
@@ -48,7 +55,6 @@ class _MainLayoutState extends ConsumerState<MainLayout> {
               title: Text('Criar Post'),
               onTap: () {
                 navigatorPushNamed(context, createPostRoute);
-                Navigator.pop(context);
               },
             ),
           ],

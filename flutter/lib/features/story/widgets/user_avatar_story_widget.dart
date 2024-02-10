@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_blog_app/features/story/model/story_model.dart';
+import 'package:flutter_blog_app/features/story/model/list_story_model.dart';
 
-class UserStoryWidget extends StatelessWidget {
-  final Story story;
+class UserStoryWidget extends StatefulWidget {
+  final ListStory story;
 
   const UserStoryWidget({
     super.key,
     required this.story,
   });
+
+  @override
+  State<UserStoryWidget> createState() => _UserStoryWidgetState();
+}
+
+class _UserStoryWidgetState extends State<UserStoryWidget> {
+  @override
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +48,15 @@ class UserStoryWidget extends StatelessWidget {
             height: 60, // Tamanho original do container
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(22),
-              color: Colors.white,
+              color: Colors.grey,
               border: Border.all(
                 width: 4,
                 color: Colors.white,
               ),
-              image: story.imageUrl != null
-                  ? DecorationImage(
-                      image: NetworkImage('${story.imageUrl}'),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
+              image: widget.story.avatar != '' && widget.story.avatar != null ? DecorationImage(
+                image: NetworkImage('${widget.story.avatar}'),
+                fit: BoxFit.cover,
+              ) : null,
             ),
           ),
         ),
@@ -59,7 +64,7 @@ class UserStoryWidget extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Text(
-            '${story.name}',
+            '',
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,

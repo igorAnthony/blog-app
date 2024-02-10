@@ -35,9 +35,9 @@ class CardPostWidget extends StatelessWidget {
             Container(
               width: 130,
               decoration: BoxDecoration(
-                image: post.user?.image != null
+                image: post.user?.avatar != null
                     ? DecorationImage(
-                        image: NetworkImage('${post.user!.image}'),
+                        image: NetworkImage('${post.user!.avatar}'),
                         fit: BoxFit.cover,
                       )
                     : null,

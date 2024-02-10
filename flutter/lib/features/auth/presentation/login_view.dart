@@ -53,12 +53,11 @@ class LoginView extends ConsumerWidget {
               loading ? const Center(child: CircularProgressIndicator(strokeWidth: 3,),) :
               kTextButton('Login', (){
                 if(formkey.currentState!.validate()){
-                  ref.read(userStoreProvider.notifier).login(_email.text, _password.text);
-                  ref.watch(userStoreProvider).whenData((value) {
-                    if(value.id != null){
-                      navigatorPushNamedAndRemoveUntil(context, mainLayoutRoute);
-                    }
-                  });
+                  bool loginSuccessful = false;
+                  ref.read(userStoreProvider.notifier).login(_email.text, _password.text).then((value) => loginSuccessful = value);
+                  if(loginSuccessful){
+                    navigatorPushNamedAndRemoveUntil(context, mainLayoutRoute);
+                  }
                 }
               }),
               const Spacer(),

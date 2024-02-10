@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/colors.dart';
 import 'package:flutter_blog_app/constant/route.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
-import 'package:flutter_blog_app/utils/utils.dart';
+import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfileInfoWidget extends ConsumerWidget {
@@ -14,6 +14,8 @@ class ProfileInfoWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userStoreProvider);
+    final posts = ref.watch(postsStoreProvider());
+
 
     return Container(
       decoration: BoxDecoration(
@@ -48,10 +50,10 @@ class ProfileInfoWidget extends ConsumerWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           image: _imageFile == null
-                              ? user.value!.image != null
+                              ? user.value!.avatar != null
                                   ? DecorationImage(
                                       image:
-                                          NetworkImage('${user.value!.image}'),
+                                          NetworkImage('${user.value!.avatar}'),
                                       fit: BoxFit.cover)
                                   : null
                               : DecorationImage(
@@ -154,7 +156,7 @@ class ProfileInfoWidget extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '1.5k',
+                            '${posts.value?.length ?? 0}',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
@@ -182,7 +184,7 @@ class ProfileInfoWidget extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '2.5k',
+                            '${user.value?.following != null ? user.value!.following!.length : 0}',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
@@ -210,7 +212,7 @@ class ProfileInfoWidget extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '1.5k',
+                            '${user.value?.followers != null ? user.value!.followers!.length : 0}',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!

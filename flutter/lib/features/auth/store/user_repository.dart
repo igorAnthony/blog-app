@@ -98,26 +98,22 @@ class UserRepository {
     return apiResponse;        
   }
 
-  Future<User> getUser(int? userId, String token) async {
+  Future<User> getUser() async {
     User user = User();
-    if(userId == null) {
-      return user;
-    }
+    String? token = await _tokenStorage.getToken();
     try {
-      print("$token");
-      print("$userId");
-      final response = await Dio().get('$userURL/$userId',   
+      final response = await Dio().get(userURL,   
       options: Options(
         headers: {
           'Accept' : 'application/json',
           'Authorization' : 'Bearer $token'
         }
       ));
-      print(response);
       switch(response.statusCode) {
         case 200:
           if (response.data != null && response.data['user'] != null) {
             user = User.fromJson(response.data['user']);
+            print(user.toJson());
           } else {
             print('User data is null or missing');
           }
@@ -130,6 +126,7 @@ class UserRepository {
           break;
       }
     } catch(e){
+      print("entrei");
       print('Error: $e');
     }  
     return user;

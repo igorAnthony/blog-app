@@ -26,10 +26,13 @@ class UserStore extends _$UserStore{
     _userRepository = UserRepository();
     SharedPreferences pref = await SharedPreferences.getInstance();
     User user = User();
-    print(pref.containsKey('user'));
-    if(pref.containsKey('user')) {
+    TokenStorage tokenStorage = TokenStorage();
+    if(await tokenStorage.getToken() != null) {
+      //user = User.fromJson(jsonDecode(pref.getString("user")!));
+      print('entrei');
       user = User.fromJson(jsonDecode(pref.getString("user")!));
     }
+    print('deu erro ainda n');
     isLogged = user.id != null;
     loading = false;
     return user;

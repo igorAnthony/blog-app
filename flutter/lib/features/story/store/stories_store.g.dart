@@ -6,7 +6,7 @@ part of 'stories_store.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$storiesStoreHash() => r'1030118d31338d6e01be03ad4302f6724d9ffdb1';
+String _$storiesStoreHash() => r'f349c5bbe9e33aa402e26389cc2aef74660230b5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,11 +30,11 @@ class _SystemHash {
 }
 
 abstract class _$StoriesStore
-    extends BuildlessAutoDisposeAsyncNotifier<List<List<Story>>> {
-  late final int userId;
+    extends BuildlessAutoDisposeAsyncNotifier<List<ListStory>> {
+  late final User user;
 
-  FutureOr<List<List<Story>>> build(
-    int userId,
+  FutureOr<List<ListStory>> build(
+    User user,
   );
 }
 
@@ -43,16 +43,16 @@ abstract class _$StoriesStore
 const storiesStoreProvider = StoriesStoreFamily();
 
 /// See also [StoriesStore].
-class StoriesStoreFamily extends Family<AsyncValue<List<List<Story>>>> {
+class StoriesStoreFamily extends Family<AsyncValue<List<ListStory>>> {
   /// See also [StoriesStore].
   const StoriesStoreFamily();
 
   /// See also [StoriesStore].
   StoriesStoreProvider call(
-    int userId,
+    User user,
   ) {
     return StoriesStoreProvider(
-      userId,
+      user,
     );
   }
 
@@ -61,7 +61,7 @@ class StoriesStoreFamily extends Family<AsyncValue<List<List<Story>>>> {
     covariant StoriesStoreProvider provider,
   ) {
     return call(
-      provider.userId,
+      provider.user,
     );
   }
 
@@ -82,12 +82,12 @@ class StoriesStoreFamily extends Family<AsyncValue<List<List<Story>>>> {
 
 /// See also [StoriesStore].
 class StoriesStoreProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    StoriesStore, List<List<Story>>> {
+    StoriesStore, List<ListStory>> {
   /// See also [StoriesStore].
   StoriesStoreProvider(
-    int userId,
+    User user,
   ) : this._internal(
-          () => StoriesStore()..userId = userId,
+          () => StoriesStore()..user = user,
           from: storiesStoreProvider,
           name: r'storiesStoreProvider',
           debugGetCreateSourceHash:
@@ -97,7 +97,7 @@ class StoriesStoreProvider extends AutoDisposeAsyncNotifierProviderImpl<
           dependencies: StoriesStoreFamily._dependencies,
           allTransitiveDependencies:
               StoriesStoreFamily._allTransitiveDependencies,
-          userId: userId,
+          user: user,
         );
 
   StoriesStoreProvider._internal(
@@ -107,17 +107,17 @@ class StoriesStoreProvider extends AutoDisposeAsyncNotifierProviderImpl<
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.userId,
+    required this.user,
   }) : super.internal();
 
-  final int userId;
+  final User user;
 
   @override
-  FutureOr<List<List<Story>>> runNotifierBuild(
+  FutureOr<List<ListStory>> runNotifierBuild(
     covariant StoriesStore notifier,
   ) {
     return notifier.build(
-      userId,
+      user,
     );
   }
 
@@ -126,50 +126,49 @@ class StoriesStoreProvider extends AutoDisposeAsyncNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: StoriesStoreProvider._internal(
-        () => create()..userId = userId,
+        () => create()..user = user,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        userId: userId,
+        user: user,
       ),
     );
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<StoriesStore, List<List<Story>>>
+  AutoDisposeAsyncNotifierProviderElement<StoriesStore, List<ListStory>>
       createElement() {
     return _StoriesStoreProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is StoriesStoreProvider && other.userId == userId;
+    return other is StoriesStoreProvider && other.user == user;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, userId.hashCode);
+    hash = _SystemHash.combine(hash, user.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin StoriesStoreRef
-    on AutoDisposeAsyncNotifierProviderRef<List<List<Story>>> {
-  /// The parameter `userId` of this provider.
-  int get userId;
+mixin StoriesStoreRef on AutoDisposeAsyncNotifierProviderRef<List<ListStory>> {
+  /// The parameter `user` of this provider.
+  User get user;
 }
 
 class _StoriesStoreProviderElement
     extends AutoDisposeAsyncNotifierProviderElement<StoriesStore,
-        List<List<Story>>> with StoriesStoreRef {
+        List<ListStory>> with StoriesStoreRef {
   _StoriesStoreProviderElement(super.provider);
 
   @override
-  int get userId => (origin as StoriesStoreProvider).userId;
+  User get user => (origin as StoriesStoreProvider).user;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

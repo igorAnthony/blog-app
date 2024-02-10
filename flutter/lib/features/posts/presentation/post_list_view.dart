@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/features/categories/category_model.dart';
+import 'package:flutter_blog_app/features/posts/model/post.dart';
 import 'package:flutter_blog_app/features/posts/widgets/post_list_widget.dart';
 
 class PostListView extends StatefulWidget {
   final List<Category> categories;
-  const PostListView({required this.categories, super.key});
+  final List<Post> posts;
+  const PostListView({required this.categories,required this.posts, super.key});
 
   @override
   _PostListViewState createState() => _PostListViewState();
@@ -56,6 +58,7 @@ class _PostListViewState extends State<PostListView>
                     widget.categories.length,
                     (index) => Center(
                       child: PostListWidget(
+                        posts: widget.posts,
                         categoryId: widget.categories[index].id,
                       )
                     ),

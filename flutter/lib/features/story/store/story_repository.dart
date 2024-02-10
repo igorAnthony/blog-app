@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_blog_app/constant/api.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
+import 'package:flutter_blog_app/features/story/model/list_story_model.dart';
 import 'package:flutter_blog_app/features/story/model/story_model.dart';
 import 'package:flutter_blog_app/utils/token_storage.dart';
 import 'package:flutter_blog_app/utils/api_response.dart';
@@ -11,11 +13,11 @@ class StoriesRepository {
   TokenStorage _tokenStorage = TokenStorage();
 
   //get post by user_id
-  Future<List<List<Story>>> getStoryByUserId(int userId) async {
-    List<List<Story>> stories = [];
+  Future<List<ListStory>> getStoryByUserId(User user) async {
+    List<ListStory> stories = [];
     try{
       _token = await _tokenStorage.getToken();
-      final response = await Dio().get('$storiesURL?user_id=$userId', 
+      final response = await Dio().get('$storiesURL?user_id=${user.id}', 
           options: Options(
             headers: {
             'Accept' : 'application/json',
@@ -23,55 +25,34 @@ class StoriesRepository {
           }
         )
       );
-
+      print(response.data);
       switch(response.statusCode) {
         case 200: 
-          if(response.data == null) {
-            stories = [];
-            break;
-          }
-          /* exemplo do retorno abaixo
-            {
-              "stories": [
-                [
-                  {
-                    "id": 1,
-                    "user_id": 101,
-                    "image": "https://example.com/image1.jpg",
-                    "timestamp": "2024-01-19T12:30:45Z"
-                  },
-                  {
-                    "id": 2,
-                    "user_id": 102,
-                    "image": "https://example.com/image2.jpg",
-                    "timestamp": "2024-01-19T13:15:20Z"
-                  }
-                ],
-                [
-                  {
-                    "id": 3,
-                    "user_id": 103,
-                    "image": "https://example.com/image3.jpg",
-                    "timestamp": "2024-01-19T14:45:10Z"
-                  },
-                  {
-                    "id": 4,
-                    "user_id": 104,
-                    "image": "https://example.com/image4.jpg",
-                    "timestamp": "2024-01-19T15:20:30Z"
-                  }
-                ]
-              ]
-            }
+          final data = response.data['stories'];
+          if (data != null) {
+            final currentUserStories = data['current_user_stories'];
+            if (currentUserStories != null) {
+              // Processar histórias do usuário atual
+              ListStory currentUserlistStory = ListStory();
+              currentUserlistStory.userId = user.id;
+              currentUserlistStory.avatar = user.avatar;
+              currentUserlistStory.createdAt = user.createdAt;
+              
+              List<Story> userStories = currentUserStories.map<Story>((p) => Story.fromJson(p)).toList();
+              currentUserlistStory.setStories(userStories);
 
-          */
-          // stories = (response.data['stories'] as List).map((p) => Story.fromJson(p)).toList();
-          response.data['stories'].forEach(
-            (p){
-              stories.add((p as List).map((s) => Story.fromJson(s)).toList());
+              stories.add(currentUserlistStory);
             }
-          ).toList();
           
+            // Process friends stories
+            final friendsStories = data['friends'];
+            if (friendsStories != null) {
+              friendsStories.forEach((s) {
+                ListStory listStory = ListStory.fromJson(s);
+                if(listStory.stories?.isNotEmpty ?? false) stories.add(listStory);
+              });
+            }
+          }
           break;
         case 401:
           print('Unauthorized');

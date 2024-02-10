@@ -3,7 +3,7 @@ class User {
   String? name;
   String? username;
   String? aboutMe;
-  String? image;
+  String? avatar;
   String? email;
   String? speciality;
   String? createdAt;
@@ -15,7 +15,7 @@ class User {
   User({
     this.id,
     this.name,
-    this.image,
+    this.avatar,
     this.email,
     this.username,
     this.aboutMe,
@@ -31,7 +31,6 @@ class User {
     return User(
       id: json['id'],
       name: json['name'],
-      image: json['image'],
       email: json['email'],
       aboutMe: json['about_me'],
       speciality: json['speciality'],
@@ -39,16 +38,19 @@ class User {
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       password: json['password'],
-      followers: json['followers'] != null ? (json['followers'] as List).map((i) => User.fromJson(i)).toList() : null,
-      following: json['following'] != null ? (json['following'] as List).map((i) => User.fromJson(i)).toList() : null,
+      avatar: json['avatar'],
+      followers: json['followers'] != null ? (json['followers'] as List).map((p) => User.fromJson(p)).toList() : null,
+      following: json['following'] != null ? (json['following'] as List).map((p) => User.fromJson(p)).toList() : null,
     );
   }
+
+  
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'image': image,
+      'avatar': avatar,
       'email': email,
       'aboutMe': aboutMe,
       'speciality': speciality,

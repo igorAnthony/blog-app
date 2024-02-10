@@ -1,25 +1,26 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blog_app/features/story/model/list_story_model.dart';
 import 'package:flutter_blog_app/features/story/model/story_model.dart';
 import 'package:flutter_blog_app/features/story/presentation/opened_story_view.dart';
 
 class OneUserStoryNavigationView extends StatefulWidget {
-  List<Story> stories;
-  String? avatarUrl;
-  OneUserStoryNavigationView(this.stories, {this.avatarUrl, super.key});
+  final ListStory stories;
+  OneUserStoryNavigationView(this.stories, {super.key});
 
   @override
   State<OneUserStoryNavigationView> createState() => _OneUserStoryNavigationViewViewState();
 }
 
-class _OneUserStoryNavigationViewViewState extends State<OneUserStoryNavigationView>
-    with SingleTickerProviderStateMixin {
+class _OneUserStoryNavigationViewViewState extends State<OneUserStoryNavigationView> {
   double currentPageValue = 0.0;
   int lastIndex = 0;
+
   @override
   void initState() {
     super.initState();
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -27,7 +28,7 @@ class _OneUserStoryNavigationViewViewState extends State<OneUserStoryNavigationV
 
   @override
   Widget build(BuildContext context) {
-    //List<Story> stories = widget.stories;
+    List<Story> stories = widget.stories.getStories();
     // return PageView.builder(
     //   scrollDirection: Axis.horizontal,
     //   itemCount: stories.length,
@@ -46,13 +47,11 @@ class _OneUserStoryNavigationViewViewState extends State<OneUserStoryNavigationV
           CarouselSlider.builder(
             itemCount: 3,
             itemBuilder: (context, index, realIndex) {
-              if (lastIndex == 2) { // 2 is the last index
-                Navigator.of(context).pop();
-              }
+              Story story = stories[index];
               return OpenedStoryView(
-                imageUrl: 'https://picsum.photos/200/300?random=$index',
-                name: 'User $index',
-                avatarUrl: 'https://picsum.photos/200/300?random=$index',
+                imageUrl: story.image ?? "",
+                name: widget.stories.name?? "",
+                avatarUrl: widget.stories.avatar,
               );
             },
             options: CarouselOptions(
@@ -65,7 +64,6 @@ class _OneUserStoryNavigationViewViewState extends State<OneUserStoryNavigationV
               onPageChanged: (index, reason) {
                 setState(() {
                   currentPageValue = index.toDouble();
-
                 });
                 
               },

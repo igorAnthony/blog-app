@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_app/constant/decoration.dart';
+import 'package:flutter_blog_app/features/auth/model/user.dart';
 import 'package:flutter_blog_app/features/auth/store/user_store.dart';
+import 'package:flutter_blog_app/features/posts/model/post.dart';
+import 'package:flutter_blog_app/features/posts/store/posts_store.dart';
 import 'package:flutter_blog_app/features/posts/widgets/post_list_widget.dart';
 import 'package:flutter_blog_app/features/profile/widgets/profile_header_widget.dart';
 import 'package:flutter_blog_app/features/profile/widgets/profile_info_widget.dart';
@@ -8,7 +11,8 @@ import 'package:flutter_blog_app/features/profile/widgets/profile_posts_widget.d
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfileView extends ConsumerStatefulWidget {
-  const ProfileView({super.key});
+  final User user;
+  const ProfileView({required this.user, super.key});
 
   @override
   _ProfileViewState createState() => _ProfileViewState();
@@ -17,11 +21,11 @@ class ProfileView extends ConsumerStatefulWidget {
 class _ProfileViewState extends ConsumerState<ProfileView> {
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userStoreProvider);
+    final user = widget.user;
+    List<Post> posts = ref.read(postsStoreProvider(userId: user.id)).value!;
     
     return Scaffold(
-      body: user.asData?.isLoading ?? true ? const Center(child: CircularProgressIndicator(),)
-    : Container(
+      body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         height: MediaQuery.of(context).size.height,
         child: Column(
@@ -40,7 +44,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
               ],
             ),
             const SizedBox(height: 10),
-            Expanded(child: PostListWidget(userId: user.asData!.value.id))
+            Expanded(child: PostListWidget(userId: user.id, posts: posts))
 
           ],
         ),

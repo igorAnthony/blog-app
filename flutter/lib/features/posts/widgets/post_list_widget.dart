@@ -8,8 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PostListWidget extends ConsumerStatefulWidget {
   final int? categoryId;
   final int? userId;
+  final List<Post> posts;
 
-  const PostListWidget({this.categoryId, this.userId, super.key});
+  const PostListWidget({this.categoryId, this.userId, required this.posts, super.key});
 
   @override
   _PostListWidgetState createState() => _PostListWidgetState();
